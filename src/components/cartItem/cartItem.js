@@ -1,5 +1,7 @@
 import React from 'react'
-import { View, Text, StyleSheet,Image,Dimensions } from 'react-native'
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native'
+import {useNavigation} from '@react-navigation/native';
+
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -12,8 +14,11 @@ const width = Dimensions.get('window').width
 const img = require('../../assests/images/img.png')
 
 const CartItem = () => {
+  const navigation = useNavigation();
     return (
-      <View style={[styles.container]}>
+      <TouchableOpacity
+        style={[styles.container]}
+        onPress={() => navigation.navigate('ItemView')}>
         <Image source={img} style={styles.img} resizeMode="contain" />
         <View style={styles.containerRight}>
           <View style={[styles.headingsTop, styles.flex]}>
@@ -28,12 +33,12 @@ const CartItem = () => {
             <View>
               <IncrementDecrementButton size="small" />
             </View>
-            <View style={styles.delete}>
+            <TouchableOpacity style={styles.delete}>
               <IconM name="trash-can" size={30} color={'#fff'} />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
 }
 
@@ -58,7 +63,7 @@ const styles = StyleSheet.create({
   },
   img: {
     width: width * 0.2,
-    maxHeight: 150,
+    maxHeight: 100,
   },
   heading: {
     fontSize: fontSize.large,
@@ -68,8 +73,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: fontSize.normal,
-    fontWeight: '700',
-      color: colors.black,
+      color: colors.grey,
     marginBottom:10,
     },
     rating: {

@@ -1,21 +1,27 @@
 import React from 'react';
-import { View, TextInput, StyleSheet,Dimensions } from 'react-native'
+import { View, TextInput, StyleSheet, Dimensions } from 'react-native'
+import {useNavigation} from '@react-navigation/native';
+import IconF from 'react-native-vector-icons/Feather';
+
 import { colors } from '../../colors/colors';
 import { fontSize } from '../../typography/typography';
-import IconF from 'react-native-vector-icons/Feather';
+
+
 const width = Dimensions.get('window').width
 const SearchInput = () => {
+  const navigation = useNavigation();
+
     return (
       <View style={styles.container}>
             <IconF name="search" size={30} color={colors.black} style={ styles.icon}/>
-        <TextInput style={styles.input} placeholder="What are you looking for?"/>
+        <TextInput onFocus={()=> navigation.navigate('Search')} style={styles.input} placeholder="What are you looking for?"/>
       </View>
     );
 }
 
 const styles = StyleSheet.create({
     input: {
-        height: 40,
+        height: 50,
         color: colors.grey,
         backgroundColor: colors.background_top,
         borderWidth: 0,

@@ -15,47 +15,34 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import IncrementDecrementButton from '../components/buttons/incrementDecrementButton';
-import CartSection from '../components/cartSection/cartSectionComponent';
+import FavoriteSection from '../components/favoriteSection/favoriteSection';
 
 const width = Dimensions.get('window').width;
 
 const img1 = require('../assests/images/img2.png');
 
-const CartScreen = ({navigation}) => {
+const FavoriteScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
             <IconF name="chevron-left" size={40} color={colors.black} />
           </TouchableOpacity>
-          <View style={styles.topNavCenter}>
-            <Icon name="handbag" size={30} color={colors.black} />
-            <Text style={styles.topNavText}> R 750.00</Text>
-          </View>
+            <IconM name="heart" size={30} color={colors.red} />
           <Icon name="options-vertical" size={30} color={colors.black} />
         </View>
         <View style={styles.aside}>
           <Text style={styles.asideText}>
             there are <Text style={{color: colors.yellow}}>10</Text> items in
-            cart
+            your
           </Text>
         </View>
-        <CartSection title="starters" name='cart'/>
-        <CartSection title="Main Courses"  name='cart'/>
-        <CartSection title="Drinks" name='cart'/>
+        <FavoriteSection title="starters" name="cart" />
+        <FavoriteSection title="Main Courses" name="cart" />
+        <FavoriteSection title="Drinks" name="cart" />
       </ScrollView>
-      <View style={styles.botttomNav}>
-        <View style={[styles.botttomNavBtn, {backgroundColor: colors.yellow}]}>
-          <Text style={styles.botttomNavBtnInnerText}>
-            Add instructions to chef
-          </Text>
-        </View>
-        <View style={styles.botttomNavBtn}>
-          <Text style={styles.botttomNavBtnInnerText}> Order Now</Text>
-        </View>
-      </View>
     </SafeAreaView>
   );
 };
@@ -104,46 +91,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  botttomNav: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 5,
-  },
-  botttomNavBtn: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: colors.black,
-    borderRadius: 1000,
-    width: (width - 30) / 2,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  botttomNavBtnInner: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  botttomNavBtnInnerText: {
-    color: '#fff',
-    fontSize: fontSize.large,
-    fontWeight: '700',
-    textAlign: 'center',
-    textTransform: 'capitalize',
-  },
-  botttomNavPriceHeading: {
-    fontSize: fontSize.large,
-    fontWeight: '700',
-    textTransform: 'capitalize',
-    color: colors.black,
-  },
-
-  botttomNavPrice: {
-    fontSize: fontSize.large,
-    color: colors.blue_dark,
-  },
 });
 
-export default CartScreen;
+export default FavoriteScreen;

@@ -9,6 +9,7 @@ import {
   FlatList,
   TouchableHighlight,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import {colors} from '../colors/colors';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
@@ -20,13 +21,13 @@ import Section from '../components/section/sectionComponent';
 
 const width = Dimensions.get('window').width;
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   const menus = ['starters', 'main', 'salads', 'drinks', 'desserts'];
-
+  const navigateTo = screenName => {
+    navigation.navigate(screenName);
+  };
   const renderMenu = ({item}) => {
-    return (
-        <Text style={styles.menu}>{item}</Text>
-    );
+    return <Text style={styles.menu}>{item}</Text>;
   };
 
   return (
@@ -35,13 +36,18 @@ const HomeScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
           <IconF name="menu" size={40} color={colors.black} />
-          <Icon name="handbag" size={35} color={colors.black} />
+          <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+            <Icon name="handbag" size={35} color={colors.black} />
+          </TouchableOpacity>
         </View>
 
         <HeaderComponent />
         <SearchInput />
 
-        <Text style={styles.catagory}>choose from our best menus</Text>
+        <View style={{marginVertical:20}}>
+          <Text style={styles.catagory}>choose from our</Text>
+          <Text style={styles.catagory}>best menus</Text>
+        </View>
         <View>
           <FlatList
             showsHorizontalScrollIndicator={false}
@@ -72,12 +78,10 @@ const styles = StyleSheet.create({
   },
 
   catagory: {
-    marginTop: 40,
     fontSize: fontSize.large_xxl,
     fontWeight: 'bold',
     textTransform: 'uppercase',
     color: colors.yellow,
-    marginBottom: 20,
   },
 
   menu: {

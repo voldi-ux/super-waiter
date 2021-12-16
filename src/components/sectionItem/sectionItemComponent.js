@@ -11,13 +11,18 @@ import {colors} from '../../colors/colors';
 import IconF from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { fontSize } from '../../typography/typography';
+import { useNavigation } from '@react-navigation/native'
 
 const width = Dimensions.get('window').width;
 const img1 = require('../../assests/images/img.png');
 
-const SectionItem = ({item}) => {
+const SectionItem = ({ item }) => {
+  const navigation = useNavigation()
+
   return (
-    <View style={styles.item}>
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => navigation.navigate('ItemView')}>
       <View
         style={{
           display: 'flex',
@@ -25,9 +30,12 @@ const SectionItem = ({item}) => {
           flexDirection: 'row',
         }}>
         <View></View>
+        <TouchableOpacity>
         <IconF name="heart" size={20} color={colors.black} />
+        </TouchableOpacity>
       </View>
-        <Image source={img1} resizeMode="contain" style={styles.img} />
+
+      <Image source={img1} resizeMode="contain" style={styles.img} />
       <View
         style={{
           display: 'flex',
@@ -44,12 +52,12 @@ const SectionItem = ({item}) => {
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        <Text style={styles.price }>R 34</Text>
+        <Text style={styles.price}>R 34</Text>
         <TouchableOpacity>
           <Icon name="handbag" size={30} color={colors.black} />
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -70,7 +78,6 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: fontSize.large,
-    fontWeight: '700',
     color: colors.grey,
   },
 

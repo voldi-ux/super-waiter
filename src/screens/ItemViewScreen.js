@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   Dimensions,
   Image,
+  TouchableOpacity
 } from 'react-native';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
@@ -21,13 +22,15 @@ const height = Dimensions.get('window').height;
 
 const img1 = require('../assests/images/img2.png');
 
-const ItemViewScreen = () => {
+const ItemViewScreen = ({ navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
-          <IconF name="chevron-left" size={40} color={colors.black} />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <IconF name="chevron-left" size={40} color={colors.black} />
+          </TouchableOpacity>
           <Text style={styles.headingTop}>sea salad</Text>
           <Icon name="options-vertical" size={30} color={colors.black} />
         </View>
@@ -65,7 +68,7 @@ const ItemViewScreen = () => {
         <View style={styles.botttomNavBtn}>
           <View style={styles.botttomNavBtnInner}>
             <Icon name="handbag" size={30} color={'#ffff'} />
-            <Text style={styles.botttomNavBtnInnerText}> Add to cart</Text>
+            <Text style={styles.botttomNavBtnInnerText}> { '  '}Add to cart</Text>
           </View>
         </View>
       </View>
@@ -169,6 +172,7 @@ const styles = StyleSheet.create({
     width: width / 2,
     paddingHorizontal: 10,
     paddingVertical: 10,
+
   },
   botttomNavBtnInner: {
     display: 'flex',

@@ -23,7 +23,7 @@ const Section = ({title, items}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>{title}</Text>
-      <FlatList data={items} renderItem={renderItem} horizontal />
+      <FlatList data={items} renderItem={renderItem} horizontal showsHorizontalScrollIndicator={false} />
     </View>
   );
 };

@@ -3,21 +3,17 @@ import {View, Text, StyleSheet, Dimensions} from 'react-native';
 import CartItem from '../cartItem/cartItem';
 import {fontSize} from '../../typography/typography';
 import {colors} from '../../colors/colors';
+import FavoriteItem from '../favoriteItem/favoriteItem';
 
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
 
-//name should be either cart or favorite
-const CartSection = ({title, items}) => {
+const FavoriteSection = ({title, items}) => {
   return (
     <View>
       <Text style={styles.headingTop}>{title}</Text>
-      <View style={styles.cartSectionItems}>
-        <CartItem />
-        <CartItem />
-        <CartItem />
-     
-        
+      <View>
+     <FavoriteItem/>
+     <FavoriteItem/>
+     <FavoriteItem/>
       </View>
     </View>
   );
@@ -34,4 +30,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CartSection;
+export default FavoriteSection;
