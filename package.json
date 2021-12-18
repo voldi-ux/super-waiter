@@ -6,6 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
+    "reset": "react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint ."
   },
@@ -17,6 +18,7 @@
     "react-native-anchor-carousel": "^4.0.1",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.1",
+    "react-native-slideshow-improved": "^0.0.4",
     "react-native-vector-icons": "^9.0.0",
     "react-native-video-player": "^0.12.0"
   },

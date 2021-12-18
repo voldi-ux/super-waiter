@@ -18,6 +18,7 @@ import HeaderComponent from '../components/header/headerComponent';
 import SearchInput from '../components/searchInput/searchInputComponent';
 import {fontSize} from '../typography/typography';
 import Section from '../components/section/sectionComponent';
+import SlideshowTest from '../components/slideShow/slideShow';
 
 const width = Dimensions.get('window').width;
 
@@ -41,7 +42,8 @@ const HomeScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
 
-        <HeaderComponent />
+        {/* <HeaderComponent /> */}
+        <SlideshowTest />
         <SearchInput />
 
         <View style={{marginVertical:20}}>
