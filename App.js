@@ -1,10 +1,14 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+} from '@react-navigation/drawer';
 import HomeScreen from './src/screens/HomeScreen';
 import ItemViewScreen from './src/screens/ItemViewScreen';
 import CartScreen from './src/screens/CartScreen';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SearchScreen from './src/screens/SearchScreen';
 import FavoriteScreen from './src/screens/favorites';
 import OrderHistoryScreen from './src/screens/OrderHistoryScreen';
@@ -13,15 +17,31 @@ import SignInScreen from './src/screens/SginInScreen';
 import RegisterScreen from './src/screens/Register';
 import OnboardScreen from './src/screens/OnboardScreen';
 
+import DrawerContent from './src/components/drawerContent/drawerContent';
+
 const Stack = createNativeStackNavigator();
+
+const Drawer = createDrawerNavigator();
+
+function AppDrawer() {
+  return (
+    <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+      <Drawer.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{headerShown: false}}
+      />
+    </Drawer.Navigator>
+  );
+}
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="RegisterScreen">
+      <Stack.Navigator initialRouteName="AppDrawer">
         <Stack.Screen
-          name="Home"
-          component={HomeScreen}
+          name="AppDrawer"
+          component={AppDrawer}
           options={{headerShown: false}}
         />
         <Stack.Screen

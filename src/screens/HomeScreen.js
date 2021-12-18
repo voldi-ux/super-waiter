@@ -36,7 +36,9 @@ const HomeScreen = ({navigation}) => {
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
-          <IconF name="menu" size={40} color={colors.black} />
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <IconF name="menu" size={40} color={colors.black} />
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
             <Icon name="handbag" size={35} color={colors.black} />
           </TouchableOpacity>
@@ -46,7 +48,7 @@ const HomeScreen = ({navigation}) => {
         <SlideshowTest />
         <SearchInput />
 
-        <View style={{marginVertical:20}}>
+        <View style={{marginVertical: 20}}>
           <Text style={styles.catagory}>choose from our</Text>
           <Text style={styles.catagory}>best menus</Text>
         </View>
