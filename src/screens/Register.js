@@ -30,7 +30,7 @@ const RegisterScreen = ({navigation}) => {
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <IconF name="chevron-left" size={40} color={colors.black} />
           </TouchableOpacity>
           <IconM name="account" size={40} color={colors.black} />
@@ -48,7 +48,8 @@ const RegisterScreen = ({navigation}) => {
             <Text style={[styles.link, {color: colors.yellow}]}>
               Already have an account?
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('SignInScreen')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('SignInScreen')}>
               <Text style={[styles.link, {color: colors.blue}]}>
                 {' '}
                 Sign in instead
@@ -56,7 +57,12 @@ const RegisterScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.btn}>
-            <AccountButton title="register" />
+            <AccountButton
+              title="register"
+              onPress={() =>
+                navigation.navigate('AppDrawer', {screen: 'HomeScreen'})
+              }
+            />
           </View>
         </View>
       </ScrollView>

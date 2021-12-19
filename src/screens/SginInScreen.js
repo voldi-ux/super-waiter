@@ -30,7 +30,7 @@ const SignInScreen = ({navigation}) => {
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <IconF name="chevron-left" size={40} color={colors.black} />
           </TouchableOpacity>
           <IconM name="account" size={40} color={colors.black} />
@@ -53,7 +53,13 @@ const SignInScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.btn}>
-            <AccountButton title="sign in" iconName="login" />
+            <AccountButton
+              title="sign in"
+              iconName="login"
+              onPress={() =>
+                navigation.navigate('AppDrawer', {screen: 'HomeScreen'})
+              }
+            />
           </View>
         </View>
       </ScrollView>

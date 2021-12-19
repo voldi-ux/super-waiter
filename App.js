@@ -38,7 +38,7 @@ function AppDrawer() {
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="AppDrawer">
+      <Stack.Navigator initialRouteName="OnboardScreen">
         <Stack.Screen
           name="AppDrawer"
           component={AppDrawer}

@@ -1,12 +1,15 @@
 import React, { Component} from 'react'
 import Slideshow from 'react-native-slideshow-improved';
-
+import {Dimensions} from 'react-native'
 const Slide1 = require('../../assests/images/slide.jpg');
 const Slide2 = require('../../assests/images/slide-2.jpg');
 const Slide3 = require('../../assests/images/slide-3.jpg');
 
+//the react-native slideshow package should be modified after npm install. comment out the controlls sections and the image's height and width should come from props.
 
-export default class SlideshowTest extends Component {
+const width = Dimensions.get('window').width;
+
+export default class SlideshowHeader extends Component {
   constructor(props) {
     super(props);
 
@@ -15,18 +18,12 @@ export default class SlideshowTest extends Component {
       interval: null,
       dataSource: [
         {
-          title: 'Title 1',
-          caption: 'Caption 1',
           url: Slide1,
         },
         {
-          title: 'Title 2',
-          caption: 'Caption 2',
           url: Slide2,
         },
         {
-          title: 'Title 3',
-          caption: 'Caption 3',
           url: Slide3,
         },
       ],
@@ -52,7 +49,9 @@ export default class SlideshowTest extends Component {
 
   render() {
     return (
-        <Slideshow
+      <Slideshow
+        height={250}
+        width={width}
         dataSource={this.state.dataSource}
         position={this.state.position}
         onPositionChanged={position => this.setState({position})}

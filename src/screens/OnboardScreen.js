@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  ScrollView,
   StatusBar,
   StyleSheet,
   SafeAreaView,
@@ -11,31 +10,29 @@ import {
 } from 'react-native';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
-import IconF from 'react-native-vector-icons/Feather';
-import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
-import IncrementDecrementButton from '../components/buttons/incrementDecrementButton';
-import CartSection from '../components/cartSection/cartSectionComponent';
+import OnboardSlideshow from '../components/onboardSlideShow/onboardSlideShow';
 
 const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height
 
-const img1 = require('../assests/images/img2.png');
 
 const OnboardScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.black}/>
-      <ScrollView showsVerticalScrollIndicator={false}>
-      
-      </ScrollView>
-      <View style={styles.botttomNav}>
-        <View style={[styles.botttomNavBtn, {backgroundColor: colors.yellow}]}>
-          <Text style={styles.botttomNavBtnInnerText}>
-           Sign in
-          </Text>
-        </View>
-        <View style={styles.botttomNavBtn}>
-          <Text style={styles.botttomNavBtnInnerText}> Register</Text>
+      <StatusBar barStyle="light-content" backgroundColor={colors.black} />
+      <View>
+        <OnboardSlideshow width={width} height={height} />
+        <View style={styles.botttomNav}>
+          <TouchableOpacity
+            style={[styles.botttomNavBtn, {backgroundColor: colors.yellow}]}
+            onPress={() => navigation.navigate('SignInScreen')}>
+            <Text style={styles.botttomNavBtnInnerText}>Sign in</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.botttomNavBtn}
+            onPress={() => navigation.navigate('RegisterScreen')}>
+            <Text style={styles.botttomNavBtnInnerText}> Register</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -46,44 +43,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingHorizontal: 10,
-  },
-  containerInner: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  topNav: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  topNavCenter: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  topNavText: {
-    fontSize: fontSize.large,
-    fontWeight: '800',
-    textTransform: 'capitalize',
-    color: colors.yellow,
-  },
-  aside: {
-    width: width * 0.95,
-    backgroundColor: colors.background_top,
-    padding: 10,
-    borderRadius: 100,
-    marginTop: 20,
-  },
-
-  asideText: {
-    fontSize: fontSize.large,
-    fontWeight: '800',
-    textTransform: 'capitalize',
-    color: colors.black,
-    textAlign: 'center',
   },
 
   botttomNav: {
@@ -92,6 +51,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 5,
+    paddingHorizontal:5,
+    position: 'absolute',
+    bottom: 0,
+    width:'100%'
   },
   botttomNavBtn: {
     display: 'flex',
@@ -115,17 +78,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textTransform: 'capitalize',
   },
-  botttomNavPriceHeading: {
-    fontSize: fontSize.large,
-    fontWeight: '700',
-    textTransform: 'capitalize',
-    color: colors.black,
-  },
-
-  botttomNavPrice: {
-    fontSize: fontSize.large,
-    color: colors.blue_dark,
-  },
+ 
 });
 
 export default OnboardScreen;

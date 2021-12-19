@@ -9,9 +9,9 @@ import {fontSize} from '../../typography/typography';
 
 const width = Dimensions.get('window').width
 
-const AccountButton = ({title,iconName}) => {
+const AccountButton = ({title,iconName,...props}) => {
   return (
-    <TouchableOpacity style={sytles.btn}>
+    <TouchableOpacity style={sytles.btn} {...props}>
           {iconName && <Icon name={ iconName} color={'#fff'} size={25} />}
       <Text style={sytles.title}>
         {'  '} {title}

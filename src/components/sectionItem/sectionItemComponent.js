@@ -36,6 +36,7 @@ const SectionItem = ({ item }) => {
       </View>
 
       <Image source={img1} resizeMode="contain" style={styles.img} />
+      <Text style={styles.name}>Shrimp</Text>
       <View
         style={{
           display: 'flex',
@@ -68,13 +69,19 @@ const styles = StyleSheet.create({
     width: width * 0.35,
     padding: 15,
     borderRadius: 15,
-    maxHeight: 270,
+    maxHeight: 300,
     marginBottom: 10,
     marginRight: 20,
   },
   img: {
     width: width * 0.35,
     maxHeight: 150,
+  },
+  name: {
+    fontSize: fontSize.large,
+    color: colors.black,
+    textTransform: 'capitalize',
+    marginBottom:10,
   },
   price: {
     fontSize: fontSize.large,
