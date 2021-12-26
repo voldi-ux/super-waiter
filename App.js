@@ -39,7 +39,6 @@ function AppDrawer() {
 }
 
 const App = () => {
-  console.log(store.getState())
 
   return (
     <Provider store={store}>
