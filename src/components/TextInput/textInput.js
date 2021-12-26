@@ -7,12 +7,12 @@ import {fontSize} from '../../typography/typography';
 
 const width = Dimensions.get('window').width;
 
-const TextInputComponent = ({label}) => {
+const TextInputComponent = ({label,...props}) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-      <TextInput style={styles.input} placeholder={label} />
+      <TextInput style={styles.input} placeholder={label} {...props}/>
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,22 +9,39 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import {useDispatch} from 'react-redux';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
-import IncrementDecrementButton from '../components/buttons/incrementDecrementButton';
-import FavoriteSection from '../components/favoriteSection/favoriteSection';
-import OrderHistoryItem from '../components/orderHistoryItem/orderHistoryItem';
+
 import AccountButton from '../components/buttons/accountButton';
 import TextInputComponent from '../components/TextInput/textInput';
-
-const width = Dimensions.get('window').width;
-
-const img1 = require('../assests/images/img2.png');
+import {axiosPost} from '../axios/axios';
+// import { logIn } from '../redux/userRedux/userSlice';
 
 const SignInScreen = ({navigation}) => {
+  // const dispatch = useDispatch()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [err, setErr] = useState('');
+
+  const signIn = async () => {
+    if (email.length && password.length) {
+      const resp = await axiosPost('sign-in', {email,password});
+      console.log(resp.msg);
+      if (resp.errMsg) return setErr(resp.errMsg);
+      // return dispatch(logIn(resp));
+    }
+    setErr('fill in all fields');
+  };
+
+  const handleChange = (txt, type) => {
+    console.log(txt);
+    if (type === 'email') return setEmail(txt);
+    setPassword(txt);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
@@ -38,8 +55,14 @@ const SignInScreen = ({navigation}) => {
         </View>
         <View style={styles.containerInner}>
           <Text style={styles.heading}>Sign in now</Text>
-          <TextInputComponent label="Email" />
-          <TextInputComponent label="Password" />
+          <TextInputComponent
+            label="Email"
+            onChangeText={text => handleChange(text, 'email')}
+          />
+          <TextInputComponent
+            label="Password"
+            onChangeText={text => handleChange(text, 'password')}
+          />
           <View style={styles.flex}>
             <Text style={[styles.link, {color: colors.yellow}]}>
               Do not have an account?
@@ -53,13 +76,7 @@ const SignInScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.btn}>
-            <AccountButton
-              title="sign in"
-              iconName="login"
-              onPress={() =>
-                navigation.navigate('AppDrawer', {screen: 'HomeScreen'})
-              }
-            />
+            <AccountButton title="sign in" iconName="login" onPress={signIn} />
           </View>
         </View>
       </ScrollView>
@@ -96,8 +113,8 @@ const styles = StyleSheet.create({
   flex: {
     display: 'flex',
     alignItems: 'center',
-      flexDirection: 'row',
-    marginBottom:20
+    flexDirection: 'row',
+    marginBottom: 20,
   },
   link: {
     fontSize: fontSize.normal,
