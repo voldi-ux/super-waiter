@@ -7,22 +7,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native'
 import {colors} from '../../colors/colors';
 import IconF from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { fontSize } from '../../typography/typography';
-import { useNavigation } from '@react-navigation/native'
-
+import {baseUrl } from '../../axios/axios'
 const width = Dimensions.get('window').width;
-const img1 = require('../../assests/images/img.png');
 
 const SectionItem = ({ item }) => {
   const navigation = useNavigation()
-
+ 
   return (
     <TouchableOpacity
       style={styles.item}
-      onPress={() => navigation.navigate('ItemView')}>
+      onPress={() => navigation.navigate('ItemView', {
+        _id: item._id,
+        category: item.category
+      })}>
       <View
         style={{
           display: 'flex',
@@ -31,12 +33,12 @@ const SectionItem = ({ item }) => {
         }}>
         <View></View>
         <TouchableOpacity>
-        <IconF name="heart" size={20} color={colors.black} />
+          <IconF name="heart" size={20} color={colors.black} />
         </TouchableOpacity>
       </View>
 
-      <Image source={img1} resizeMode="contain" style={styles.img} />
-      <Text style={styles.name}>Shrimp</Text>
+      <Image source={{uri:`${baseUrl}${item.imagePath}`}} resizeMode="contain" style={styles.img} />
+      <Text style={styles.name}>{item.name}</Text>
       <View
         style={{
           display: 'flex',
@@ -53,7 +55,7 @@ const SectionItem = ({ item }) => {
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        <Text style={styles.price}>R 34</Text>
+        <Text style={styles.price}>R {item.price}</Text>
         <TouchableOpacity>
           <Icon name="handbag" size={30} color={colors.black} />
         </TouchableOpacity>
@@ -69,13 +71,14 @@ const styles = StyleSheet.create({
     width: width * 0.35,
     padding: 15,
     borderRadius: 15,
-    maxHeight: 300,
+    minHeight: 300,
     marginBottom: 10,
     marginRight: 20,
   },
   img: {
-    width: width * 0.35,
-    maxHeight: 150,
+    // width: width * 0.35,
+    height: 150,
+    marginHorizontal:"auto"
   },
   name: {
     fontSize: fontSize.large,

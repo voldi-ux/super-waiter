@@ -11,6 +11,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {colors} from '../colors/colors';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
@@ -19,11 +20,22 @@ import SearchInput from '../components/searchInput/searchInputComponent';
 import {fontSize} from '../typography/typography';
 import Section from '../components/section/sectionComponent';
 import SlideshowHeader from '../components/slideShow/slideShow';
+import {
+  selectCategories,
+  selectHot,
+  selectRecomended,
+} from '../redux/appData/appData';
+import { store } from '../redux/store/store';
 
 const width = Dimensions.get('window').width;
 
 const HomeScreen = ({navigation}) => {
   const menus = ['starters', 'main', 'salads', 'drinks', 'desserts'];
+  const dispatch = useDispatch();
+  // const categories = useSelector(selectCategories);
+  const recomended = useSelector(selectRecomended);
+  const hot = useSelector(selectHot);
+  console.log(hot)
   const navigateTo = screenName => {
     navigation.navigate(screenName);
   };
@@ -61,8 +73,8 @@ const HomeScreen = ({navigation}) => {
             horizontal
           />
         </View>
-        <Section title={'Hot stuff this week'} items={[1, 2, 3, 4]} />
-        <Section title={'for you '} items={[1, 2, 3, 4]} />
+        <Section title={'Hot stuff this week'} items={hot} />
+        <Section title={'for you '} items={recomended} />
       </ScrollView>
     </SafeAreaView>
   );

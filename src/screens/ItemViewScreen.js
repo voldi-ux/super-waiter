@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   Dimensions,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
@@ -16,13 +16,18 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import IncrementDecrementButton from '../components/buttons/incrementDecrementButton';
-
+import {useSelector} from 'react-redux';
+import {getItem} from '../redux/appData/appData';
+import {baseUrl} from '../axios/axios';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const img1 = require('../assests/images/img2.png');
 
-const ItemViewScreen = ({ navigation}) => {
+const ItemViewScreen = ({navigation, route}) => {
+  const {_id, category} = route.params;
+  const item = useSelector(getItem)(_id, category);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
@@ -31,15 +36,19 @@ const ItemViewScreen = ({ navigation}) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <IconF name="chevron-left" size={40} color={colors.black} />
           </TouchableOpacity>
-          <Text style={styles.headingTop}>sea salad</Text>
-          <Icon name="options-vertical" size={30} color={colors.black} />
+          <Text style={styles.headingTop}>{item.name}</Text>
+         <View></View>
         </View>
-        <Image style={styles.img} source={img1} resizeMode="contain" />
+        <Image
+          style={styles.img}
+          source={{uri: `${baseUrl}${item.imagePath}`}}
+          resizeMode="contain"
+        />
         <View style={styles.btn}>
           <IncrementDecrementButton size="large" />
         </View>
         <View style={styles.headings}>
-          <Text style={styles.heading}>Sea sald</Text>
+          <Text style={styles.heading}>{item.name}</Text>
           <View style={styles.ratings}>
             <IconM name="star" size={40} color={colors.yellow} />
             <Text style={styles.rating}>4.5</Text>
@@ -68,7 +77,10 @@ const ItemViewScreen = ({ navigation}) => {
         <View style={styles.botttomNavBtn}>
           <View style={styles.botttomNavBtnInner}>
             <Icon name="handbag" size={30} color={'#ffff'} />
-            <Text style={styles.botttomNavBtnInnerText}> { '  '}Add to cart</Text>
+            <Text style={styles.botttomNavBtnInnerText}>
+              {' '}
+              {'  '}Add to cart
+            </Text>
           </View>
         </View>
       </View>
@@ -161,7 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical:5
+    paddingVertical: 5,
   },
   botttomNavBtn: {
     display: 'flex',
@@ -172,7 +184,6 @@ const styles = StyleSheet.create({
     width: width / 2,
     paddingHorizontal: 10,
     paddingVertical: 10,
-
   },
   botttomNavBtnInner: {
     display: 'flex',

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -17,30 +17,40 @@ import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import AccountButton from '../components/buttons/accountButton';
 import TextInputComponent from '../components/TextInput/textInput';
+import ErrorComponent from '../components/errorComponent/error';
 import {axiosPost} from '../axios/axios';
-// import { logIn } from '../redux/userRedux/userSlice';
+import { logIn } from '../redux/userRedux/userSlice';
 
 const SignInScreen = ({navigation}) => {
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [err, setErr] = useState('');
+  const [err, setErr] = useState(null);
 
   const signIn = async () => {
+      console.log('signing in 1');
+
     if (email.length && password.length) {
-      const resp = await axiosPost('sign-in', {email,password});
-      console.log(resp.msg);
-      if (resp.errMsg) return setErr(resp.errMsg);
-      // return dispatch(logIn(resp));
+      console.log('signing in 2')
+      const resp = await axiosPost('sign-in', {email, password});
+      if (resp.msg) return setErr(resp.msg);
+      return dispatch(logIn(resp));
     }
     setErr('fill in all fields');
   };
 
   const handleChange = (txt, type) => {
-    console.log(txt);
     if (type === 'email') return setEmail(txt);
     setPassword(txt);
   };
+
+  const resetValues = () => {
+    setEmail('')
+    setPassword('')
+    setErr(null)
+  }
+  
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -55,12 +65,14 @@ const SignInScreen = ({navigation}) => {
         </View>
         <View style={styles.containerInner}>
           <Text style={styles.heading}>Sign in now</Text>
+          {err ? <ErrorComponent msg={err} /> : null}
           <TextInputComponent
             label="Email"
             onChangeText={text => handleChange(text, 'email')}
           />
           <TextInputComponent
             label="Password"
+            secureTextEntry={true}
             onChangeText={text => handleChange(text, 'password')}
           />
           <View style={styles.flex}>
@@ -68,7 +80,10 @@ const SignInScreen = ({navigation}) => {
               Do not have an account?
             </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('RegisterScreen')}>
+              onPress={() => {
+                navigation.navigate('RegisterScreen');
+                resetValues();
+              }}>
               <Text style={[styles.link, {color: colors.blue}]}>
                 {' '}
                 Sign up instead

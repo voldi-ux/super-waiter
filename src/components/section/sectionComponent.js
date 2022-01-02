@@ -16,14 +16,14 @@ import SectionItem from '../sectionItem/sectionItemComponent';
 
 
 const Section = ({title, items}) => {
-  const renderItem = () => {
-    return <SectionItem />
+  const renderItem = ({ item }) => {
+    return <SectionItem item={item }/>
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>{title}</Text>
-      <FlatList data={items} renderItem={renderItem} horizontal showsHorizontalScrollIndicator={false} />
+      <FlatList data={items} renderItem={renderItem} horizontal showsHorizontalScrollIndicator={false} keyExtractor={ (item) => item._id}/>
     </View>
   );
 };

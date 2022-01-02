@@ -8,9 +8,13 @@ import IconAD from 'react-native-vector-icons/AntDesign';
 
 import { fontSize } from '../../typography/typography';
 import { colors } from '../../colors/colors';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../redux/userRedux/userSlice';
 
 
-const DrawerContent = ({navigation}) => {
+const DrawerContent = ({ navigation }) => {
+  
+  const dispatch = useDispatch()
   return (
     <DrawerContentScrollView style={{backgroundColor: colors.background}}>
       <Image
@@ -42,7 +46,7 @@ const DrawerContent = ({navigation}) => {
         <IconAD name="appstore1" size={25} color={colors.orange} />
         <Text style={styles.label}>About</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.drawerItem}>
+      <TouchableOpacity style={styles.drawerItem} onPress = {() => dispatch(logOut())}>
         <Icon name="logout" size={25} color={colors.purple} />
         <Text style={styles.label}>Log out</Text>
       </TouchableOpacity>
@@ -67,7 +71,7 @@ const styles = StyleSheet.create({
         color:colors.black,
         textTransform: "capitalize",
         alignSelf: 'center',
-        marginLeft: 10,
+        marginLeft: 40,
         textTransform: 'capitalize',
         fontWeight:'700'
   }
