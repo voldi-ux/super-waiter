@@ -24,6 +24,7 @@ import { store } from './src/redux/store/store'
 import { selectUser } from './src/redux/userRedux/userSlice';
 import { axiosGet } from './src/axios/axios';
 import {getData} from './src/redux/appData/appData'
+import CategoryScreen from './src/screens/CategoryScreen';
 
 const width = Dimensions.get('window').width;
 
@@ -63,7 +64,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="AppDrawer">
-        {user.info ? (
+        {'user.info' ? (
           <>
             <Stack.Screen
               name="AppDrawer"
@@ -100,14 +101,19 @@ const App = () => {
               component={AccountScreen}
               options={{headerShown: false}}
             />
+            <Stack.Screen
+              name="CategoryScreen"
+              component={CategoryScreen}
+              options={{headerShown: false}}
+            />
           </>
         ) : (
           <>
-              <Stack.Screen
-                name="OnboardScreen"
-                component={OnboardScreen}
-                options={{headerShown: false}}
-              />
+            <Stack.Screen
+              name="OnboardScreen"
+              component={OnboardScreen}
+              options={{headerShown: false}}
+            />
             <Stack.Screen
               name="SignInScreen"
               component={SignInScreen}

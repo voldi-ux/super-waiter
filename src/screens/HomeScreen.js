@@ -26,6 +26,8 @@ import {
   selectRecomended,
 } from '../redux/appData/appData';
 import { store } from '../redux/store/store';
+import PopUPModal from '../components/modal/modal';
+import Count from '../components/cartItemCount/count';
 
 const width = Dimensions.get('window').width;
 
@@ -35,26 +37,32 @@ const HomeScreen = ({navigation}) => {
   // const categories = useSelector(selectCategories);
   const recomended = useSelector(selectRecomended);
   const hot = useSelector(selectHot);
-  console.log(hot)
   const navigateTo = screenName => {
     navigation.navigate(screenName);
   };
   const renderMenu = ({item}) => {
-    return <Text style={styles.menu}>{item}</Text>;
+    return (
+      <TouchableOpacity onPress={() => navigation.navigate('CategoryScreen', {
+        category:item
+      })}>
+        <Text style={styles.menu}>{item}</Text>
+      </TouchableOpacity>
+    );
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <IconF name="menu" size={40} color={colors.black} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
-            <Icon name="handbag" size={35} color={colors.black} />
+          <Icon name="handbag" size={35} color={colors.black} />
+          <Count />
           </TouchableOpacity>
         </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
 
         {/* <HeaderComponent /> */}
         <SlideshowHeader />
@@ -75,6 +83,7 @@ const HomeScreen = ({navigation}) => {
         </View>
         <Section title={'Hot stuff this week'} items={hot} />
         <Section title={'for you '} items={recomended} />
+        <PopUPModal msg='The item you are trying to add is already in cart'/>
       </ScrollView>
     </SafeAreaView>
   );

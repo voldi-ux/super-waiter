@@ -13,17 +13,31 @@ import IconF from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { fontSize } from '../../typography/typography';
 import {baseUrl } from '../../axios/axios'
+import { useDispatch } from 'react-redux';
+import { addItem } from '../../redux/cart/cartRedux';
 const width = Dimensions.get('window').width;
 
 const SectionItem = ({ item }) => {
   const navigation = useNavigation()
- 
+  const dispatch = useDispatch()
+  
+  const addToCart = () => {
+    dispatch(
+      addItem({
+        ...item,
+        addOns: [],
+        qty: 1,
+      }),
+    );
+  }
+
   return (
     <TouchableOpacity
       style={styles.item}
       onPress={() => navigation.navigate('ItemView', {
         _id: item._id,
-        category: item.category
+        category: item.category,
+        qty:1
       })}>
       <View
         style={{
@@ -56,7 +70,7 @@ const SectionItem = ({ item }) => {
           alignItems: 'center',
         }}>
         <Text style={styles.price}>R {item.price}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={addToCart}>
           <Icon name="handbag" size={30} color={colors.black} />
         </TouchableOpacity>
       </View>

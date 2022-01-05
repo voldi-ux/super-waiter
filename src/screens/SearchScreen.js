@@ -27,13 +27,13 @@ const SearchScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <IconF name="chevron-left" size={40} color={colors.black} />
           </TouchableOpacity>
            <TextInput style={styles.textInput} placeholder='What are you looking for?' autoFocus/>
         </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.aside}>
           <Text style={styles.asideText}>
             You Searched For<Text style={{color: colors.yellow}}> sea Food</Text> And
@@ -41,11 +41,7 @@ const SearchScreen = ({navigation}) => {
           </Text>
               </View>
               
-              <SearchItem />
-              <SearchItem />
-              <SearchItem />
-              <SearchItem />
-              <SearchItem />
+      
             
       </ScrollView>
     </SafeAreaView>

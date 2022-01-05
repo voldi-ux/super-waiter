@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  ScrollView,
   StatusBar,
   StyleSheet,
   SafeAreaView,
@@ -13,39 +12,40 @@ import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
-import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
-import IncrementDecrementButton from '../components/buttons/incrementDecrementButton';
-import CartSection from '../components/cartSection/cartSectionComponent';
+import { useSelector } from 'react-redux';
+import { selectCartItems, selectTotal } from '../redux/cart/cartRedux';
+import CartItem from '../components/cartItem/cartItem';
+import { FlatList } from 'react-native-gesture-handler';
 
 const width = Dimensions.get('window').width;
 
-const img1 = require('../assests/images/img2.png');
 
-const CartScreen = ({navigation}) => {
+const CartScreen = ({ navigation }) => {
+  const items = useSelector(selectCartItems)
+  const total = useSelector(selectTotal)
+  const renderItem = ({ item }) => {
+    return <CartItem item={ item}/>
+  }
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <IconF name="chevron-left" size={40} color={colors.black} />
           </TouchableOpacity>
           <View style={styles.topNavCenter}>
             <Icon name="handbag" size={30} color={colors.black} />
-            <Text style={styles.topNavText}> R 750.00</Text>
+          <Text style={styles.topNavText}> R {total}.00</Text>
           </View>
           <Icon name="options-vertical" size={30} color={colors.black} />
         </View>
         <View style={styles.aside}>
           <Text style={styles.asideText}>
-            there are <Text style={{color: colors.yellow}}>10</Text> items in
+            there are currently<Text style={{ color: colors.yellow }}> {items.length}</Text> items in
             cart
           </Text>
         </View>
-        <CartSection title="starters" name='cart'/>
-        <CartSection title="Main Courses"  name='cart'/>
-        <CartSection title="Drinks" name='cart'/>
-      </ScrollView>
+        <FlatList data={items} keyExtractor={item => item._id} renderItem={renderItem}/>
       <View style={styles.botttomNav}>
         <View style={[styles.botttomNavBtn, {backgroundColor: colors.yellow}]}>
           <Text style={styles.botttomNavBtnInnerText}>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background_top,
     padding: 10,
     borderRadius: 100,
-    marginTop: 20,
+    marginVertical: 20,
   },
 
   asideText: {

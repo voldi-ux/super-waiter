@@ -11,16 +11,16 @@ const width = Dimensions.get('window').width
 
 const AccountButton = ({title,iconName,...props}) => {
   return (
-    <TouchableOpacity style={sytles.btn} {...props}>
+    <TouchableOpacity style={styles.btn} {...props}>
           {iconName && <Icon name={ iconName} color={'#fff'} size={25} />}
-      <Text style={sytles.title}>
+      <Text style={styles.title}>
         {'  '} {title}
       </Text>
     </TouchableOpacity>
   );
 };
 
-const sytles = StyleSheet.create({
+const styles = StyleSheet.create({
   btn: {
     display: 'flex',
     flexDirection: 'row',

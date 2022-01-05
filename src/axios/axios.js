@@ -3,12 +3,12 @@ import axios from 'axios';
 
 export const baseUrl =
   Platform.OS == 'android'
-    ? 'http://192.168.8.105:4000/'
+    ? 'http://192.168.43.12:4000'
     : 'http://localhost:4000/';
 
 export const axiosGet = async url => {
   try {
-    const resp = await axios.get(`${baseUrl}${url}`);
+    const resp = await axios.get(`${baseUrl}/${url}`);
     return resp.data;
   } catch (error) {
     console.log(error);
@@ -18,7 +18,7 @@ export const axiosGet = async url => {
 
 export const axiosPost = async (url, data) => {
   try {
-    const resp = await axios.post(`${baseUrl}${url}`, data);
+    const resp = await axios.post(`${baseUrl}/${url}`, data);
     return resp.data;
   } catch (error) {
     console.log(error);

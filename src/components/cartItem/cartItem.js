@@ -2,38 +2,74 @@ import React from 'react'
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native'
 import {useNavigation} from '@react-navigation/native';
 
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
-import IconF from 'react-native-vector-icons/Feather';
+
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import IncrementDecrementButton from '../buttons/incrementDecrementButton';
 
 import { colors } from '../../colors/colors';
 import { fontSize } from '../../typography/typography';
+import { baseUrl } from '../../axios/axios';
+import { useDispatch } from 'react-redux';
+import { decrementItem, incrementItem, removeItem } from '../../redux/cart/cartRedux';
 
-const width = Dimensions.get('window').width
-const img = require('../../assests/images/img.png')
 
-const CartItem = () => {
+const CartItem = ({ item}) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch()
+
+  const increment = () => {
+    dispatch(incrementItem(item._id))
+  }
+  const decrement = () => {
+    dispatch(decrementItem(item._id))
+  }
+ const getTotal = () => {
+   let total = item.qty * item.price;
+
+   if (item.addOns.length) {
+     return item.addOns.reduce((t, add) => {
+       return (t += add.price);
+     }, total);
+   }
+   return total;
+  };
+  
+  const remove = () => dispatch(removeItem(item._id))
     return (
       <TouchableOpacity
         style={[styles.container]}
-        onPress={() => navigation.navigate('ItemView')}>
-        <Image source={img} style={styles.img} resizeMode="contain" />
+        onPress={() =>
+          navigation.navigate('ItemView', {
+            _id: item._id,
+            category: item.category,
+            qty: item.qty,
+            addOns:item.addOns,
+            updating:true,
+          })
+        }>
+        <Image
+          source={{uri: `${baseUrl}${item.imagePath}`}}
+          style={styles.img}
+          resizeMode="contain"
+        />
         <View style={styles.containerRight}>
           <View style={[styles.headingsTop, styles.flex]}>
-            <Text style={styles.heading}>Shrimps</Text>
+            <Text style={styles.heading}>{ item.name}</Text>
             <View style={[styles.flex]}>
-              <IconM name="star" size={20} color={colors.yellow} />
-              <Text style={styles.rating}> 4.5</Text>
+              <Text style={styles.rating}>{item.qty} x {item.price}</Text>
             </View>
           </View>
-          <Text style={styles.price}>R 45.00</Text>
+          <Text style={styles.price}>R {getTotal()}.00</Text>
           <View style={[styles.flex]}>
             <View>
-              <IncrementDecrementButton size="small" />
+              <IncrementDecrementButton
+                size="small"
+                qty={item.qty}
+                increment={increment}
+                decrement={decrement}
+              />
             </View>
-            <TouchableOpacity style={styles.delete}>
+            <TouchableOpacity style={styles.delete} onPress={remove}>
               <IconM name="trash-can" size={30} color={'#fff'} />
             </TouchableOpacity>
           </View>
@@ -62,8 +98,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   img: {
-    width: width * 0.2,
-    maxHeight: 100,
+    height: 100,
+    width: 120,
+    alignSelf: 'center',
   },
   heading: {
     fontSize: fontSize.large,
@@ -73,21 +110,20 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: fontSize.normal,
-      color: colors.grey,
-    marginBottom:10,
-    },
-    rating: {
-        fontSize: fontSize.normal,
-        color:colors.blue_dark
-    },
-    bottom: {
-        display: 'flex',
-        flexDirection:'row'
-    },
-    delete: {
-        backgroundColor:colors.red
-    },
-
+    color: colors.grey,
+    marginBottom: 10,
+  },
+  rating: {
+    fontSize: fontSize.normal,
+    color: colors.blue_dark,
+  },
+  bottom: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  delete: {
+    backgroundColor: colors.red,
+  },
 });
 
 export default CartItem

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  addons,
 } from 'react-native';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
@@ -16,36 +17,89 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import IncrementDecrementButton from '../components/buttons/incrementDecrementButton';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getItem} from '../redux/appData/appData';
 import {baseUrl} from '../axios/axios';
+import AddOn from '../components/addOnComponent/addOn';
+import {addItem, updateItem} from '../redux/cart/cartRedux';
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const img1 = require('../assests/images/img2.png');
-
 const ItemViewScreen = ({navigation, route}) => {
-  const {_id, category} = route.params;
+  const dispatch = useDispatch();
+  const params = route.params;
+  const {_id, category, updating} = route.params;
   const item = useSelector(getItem)(_id, category);
+  const [addOns, setAddons] = useState(params.addOns || []);
+  const [qty, setQty] = useState(params.qty);
+
+  const removeAddOn = addOn => {
+    setAddons(prev => {
+      return prev.filter(add => add.name !== addOn.name);
+    });
+  };
+
+  const addAddOn = addOn => {
+    setAddons(prev => {
+      return [...prev, addOn];
+    });
+  };
+
+  const increment = () => {
+
+    setQty(prev => prev + 1);
+  };
+  const decrement = () => {
+    console.log('decrement', qty);
+    setQty(prev => (prev > 1 ? prev - 1 : prev));
+  };
+
+  const getTotal = () => {
+    let total = qty * item.price;
+
+    if (addOns.length) {
+      return addOns.reduce((t, add) => {
+        return (t += add.price);
+      }, total);
+    }
+    return total;
+  };
+
+  const addToCart = () => {
+    let ITEM = {...item, qty, addOns};
+
+    if (updating) {
+      dispatch(updateItem(ITEM));
+      navigation.goBack();
+    } else {
+      dispatch(addItem(ITEM));
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+      <View style={styles.topNav}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <IconF name="chevron-left" size={40} color={colors.black} />
+        </TouchableOpacity>
+        <Text style={styles.headingTop}>{item.name}</Text>
+        <View></View>
+      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <IconF name="chevron-left" size={40} color={colors.black} />
-          </TouchableOpacity>
-          <Text style={styles.headingTop}>{item.name}</Text>
-         <View></View>
-        </View>
         <Image
           style={styles.img}
           source={{uri: `${baseUrl}${item.imagePath}`}}
           resizeMode="contain"
         />
         <View style={styles.btn}>
-          <IncrementDecrementButton size="large" />
+          <IncrementDecrementButton
+            size="large"
+            increment={increment}
+            decrement={decrement}
+            qty={qty}
+          />
         </View>
         <View style={styles.headings}>
           <Text style={styles.heading}>{item.name}</Text>
@@ -68,21 +122,33 @@ const ItemViewScreen = ({navigation, route}) => {
             <Text style={styles.readMoreBtnText}>find out more</Text>
           </View>
         </View>
+        {item.addOns
+          ? item.addOns.map(add => (
+              <AddOn
+                addOns={addOns}
+                addOn={add}
+                key={add.name}
+                remove={removeAddOn}
+                add={addAddOn}
+              />
+            ))
+          : null}
       </ScrollView>
       <View style={styles.botttomNav}>
         <View>
           <Text style={styles.botttomNavPriceHeading}>total price</Text>
-          <Text style={styles.botttomNavPrice}>R 45.00</Text>
+          <Text style={styles.botttomNavPrice}>R {getTotal()}.00</Text>
         </View>
-        <View style={styles.botttomNavBtn}>
+        <TouchableOpacity style={styles.botttomNavBtn} onPress={addToCart}>
           <View style={styles.botttomNavBtnInner}>
             <Icon name="handbag" size={30} color={'#ffff'} />
             <Text style={styles.botttomNavBtnInnerText}>
               {' '}
-              {'  '}Add to cart
+              {'  '}
+              {updating ? 'update' : 'Add to cart'}
             </Text>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

@@ -1,57 +1,60 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import IconF from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {colors} from '../../colors/colors'
-import { fontSize } from '../../typography/typography';
-const IncrementDecrementButton = ({ size}) => {
+import {colors} from '../../colors/colors';
+import {fontSize} from '../../typography/typography';
+const IncrementDecrementButton = ({ size, qty, increment, decrement }) => {
+  
   return (
-    <View style={sytles.btn}>
-      <IconF
-        name="plus-circle"
-        size={size === 'large' ? sytles.iconL.size : sytles.iconS.size}
-        color={'#fff'}
-      />
-      <Text style={size === 'large' ? sytles.quantityL : sytles.quantityS}>
-        1
+    <View style={styles.btn}>
+      <TouchableOpacity onPress={increment}>
+        <IconF
+          name="plus-circle"
+          size={size === 'large' ? styles.iconL.size : styles.iconS.size}
+          color={'#fff'}
+        />
+      </TouchableOpacity>
+      <Text style={size === 'large' ? styles.quantityL : styles.quantityS}>
+        {qty}
       </Text>
-      <IconF
-        name="minus-circle"
-        size={size === 'large' ? sytles.iconL.size : sytles.iconS.size}
-        color={'#fff'}
-      />
+      <TouchableOpacity onPress={decrement}>
+        <IconF
+          name="minus-circle"
+          size={size === 'large' ? styles.iconL.size : styles.iconS.size}
+          color={'#fff'}
+        />
+      </TouchableOpacity>
     </View>
   );
-
 };
 
-
-const sytles = StyleSheet.create({
+const styles = StyleSheet.create({
   btn: {
     display: 'flex',
-    flexDirection:'row-reverse',
+    flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: colors.black,
     paddingVertical: 5,
-    paddingHorizontal:15,
+    paddingHorizontal: 15,
     width: 150,
-    borderRadius:100,
+    borderRadius: 100,
   },
   quantityL: {
     fontSize: fontSize.large_xl,
-    color:"#FFF"
+    color: '#FFF',
   },
   quantityS: {
     fontSize: fontSize.normal,
-    color:"#FFF"
+    color: '#FFF',
   },
   iconL: {
-    size:30
+    size: 30,
   },
   iconS: {
-    size:25
-  }
-})
+    size: 25,
+  },
+});
 
 export default IncrementDecrementButton;

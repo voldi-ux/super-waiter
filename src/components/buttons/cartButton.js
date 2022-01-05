@@ -5,18 +5,18 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import {colors} from '../../colors/colors';
 import {fontSize} from '../../typography/typography';
 
-const CartButton = ({title}) => {
+const CartButton = ({title,...props}) => {
   return (
-    <TouchableOpacity style={sytles.btn}>
+    <TouchableOpacity style={styles.btn} {...props}>
           <Icon name="handbag" color={'#fff'} size={25 }/>
-      <Text style={sytles.title}>
+      <Text style={styles.title}>
         {'  '} {title}
       </Text>
     </TouchableOpacity>
   );
 };
 
-const sytles = StyleSheet.create({
+const styles = StyleSheet.create({
   btn: {
     display: 'flex',
     flexDirection: 'row',
