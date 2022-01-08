@@ -14,22 +14,21 @@ import {fontSize} from '../typography/typography';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
-import IncrementDecrementButton from '../components/buttons/incrementDecrementButton';
-import FavoriteSection from '../components/favoriteSection/favoriteSection';
-import OrderHistoryItem from '../components/orderHistoryItem/orderHistoryItem';
 import AccountButton from '../components/buttons/accountButton';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../redux/userRedux/userSlice';
 
-const width = Dimensions.get('window').width;
 
-const img1 = require('../assests/images/img2.png');
 
-const AccountScreen = ({navigation}) => {
+const AccountScreen = ({ navigation }) => {
+  const user = useSelector(selectUser)
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <IconF name="chevron-left" size={40} color={colors.black} />
           </TouchableOpacity>
           <IconM name="account" size={40} color={colors.black} />
@@ -38,21 +37,21 @@ const AccountScreen = ({navigation}) => {
         <View style={styles.containerInner}>
           <View style={styles.accountListItem}>
             <IconM name="account" size={30} color={colors.purple} />
-            <Text style={styles.text}>John Doe</Text>
+            <Text style={styles.text}>{user.name} { user.surname}</Text>
             <TouchableOpacity style={styles.edit}>
               <IconM name="square-edit-outline" size={30} color={'#fff'} />
             </TouchableOpacity>
           </View>
           <View style={styles.accountListItem}>
             <IconM name="email" size={30} color={colors.yellow} />
-            <Text style={styles.text}>voldimuyumba@gmail.com</Text>
+            <Text style={styles.text}>{user.email }</Text>
             <TouchableOpacity style={styles.edit}>
               <IconM name="square-edit-outline" size={30} color={'#fff'} />
             </TouchableOpacity>
           </View>
           <View style={styles.accountListItem}>
             <IconM name="phone" size={30} color={colors.blue} />
-            <Text style={styles.text}>0629224275</Text>
+            <Text style={styles.text}>{ user.phone}</Text>
             <TouchableOpacity style={styles.edit}>
               <IconM name="square-edit-outline" size={30} color={'#fff'} />
             </TouchableOpacity>
@@ -67,6 +66,28 @@ const AccountScreen = ({navigation}) => {
             <TouchableOpacity style={styles.edit}>
               <IconM name="square-edit-outline" size={30} color={'#fff'} />
             </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.dashboard}>
+          <View style={[styles.dashboardRow, {marginBottom: 20}]}>
+            <View style={[styles.dashboardItem,{backgroundColor:colors.purple}]}>
+              <Text style={styles.dashboardTxtL}>17</Text>
+              <Text style={styles.dashboardTxtS}>completed orders</Text>
+            </View>
+            <View style={[styles.dashboardItem,{backgroundColor:colors.blue}]}>
+              <Text style={styles.dashboardTxtL}>3</Text>
+              <Text style={styles.dashboardTxtS}>current orders</Text>
+            </View>
+          </View>
+          <View style={styles.dashboardRow}>
+            <View style={[styles.dashboardItem,{backgroundColor:colors.blue}]}>
+              <Text style={styles.dashboardTxtL}>20</Text>
+              <Text style={styles.dashboardTxtS}>Total orders</Text>
+            </View>
+            <View style={[styles.dashboardItem,{backgroundColor:colors.purple}]}>
+              <Text style={styles.dashboardTxtL}>R 3232.00</Text>
+              <Text style={styles.dashboardTxtS}>Money Spent</Text>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -122,6 +143,36 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     marginLeft: 20,
+  },
+
+  dashboard: {
+    // backgroundColor: colors.background_top,
+    marginTop: 40,
+    borderRadius: 10,
+    padding: 10,
+  },
+
+  dashboardRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  dashboardItem: {
+    // alignItems:'center'
+    width: '49%',
+    padding: 10,
+    borderRadius: 10,
+  },
+
+  dashboardTxtL: {
+    fontSize: fontSize.large_xl,
+    color: colors.yellow,
+    textAlign: 'center',
+  },
+  dashboardTxtS: {
+    textAlign: 'center',
+    fontSize: fontSize.large,
+    color: '#fff',
   },
 });
 

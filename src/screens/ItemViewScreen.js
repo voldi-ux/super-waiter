@@ -51,7 +51,6 @@ const ItemViewScreen = ({navigation, route}) => {
     setQty(prev => prev + 1);
   };
   const decrement = () => {
-    console.log('decrement', qty);
     setQty(prev => (prev > 1 ? prev - 1 : prev));
   };
 

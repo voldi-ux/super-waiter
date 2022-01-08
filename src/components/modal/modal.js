@@ -1,17 +1,11 @@
 import React from 'react';
-import {Modal, Text, StyleSheet,Pressable,View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {Modal, Text, StyleSheet,Pressable,View,TouchableOpacity} from 'react-native';
 import { colors } from '../../colors/colors';
-import {selectVisible, setModalVisibilty} from '../../redux/cart/cartRedux';
 import { fontSize } from '../../typography/typography';
 
-const PopUPModal = ({msg}) => {
-  const dipsatch = useDispatch();
-  const visible = useSelector(selectVisible);
+const PopUPModal = ({msg,visible,setVisible}) => {
 
-  const setVisible = () => {
-    dipsatch(setModalVisibilty(false));
-  };
+
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -24,11 +18,11 @@ const PopUPModal = ({msg}) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>{msg}</Text>
-            <Pressable
+            <TouchableOpacity
               style={[styles.button, styles.buttonClose]}
-              onPress={setVisible}>
+              onPress={() => setVisible(false)}>
               <Text style={styles.textStyle}>close</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>

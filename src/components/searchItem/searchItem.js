@@ -16,6 +16,7 @@ import CartButton from '../buttons/cartButton';
 import { baseUrl } from '../../axios/axios';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../../redux/cart/cartRedux';
+import FavHeart from '../FavouriteHeart/Heart';
 
 const SearchItem = ({item}) => {
   const navigation = useNavigation();
@@ -54,9 +55,7 @@ const SearchItem = ({item}) => {
               <IconM name="star" size={25} color={colors.yellow} />
               <Text style={styles.rating}> 4.5 {'     '}</Text>
             </View>
-            <TouchableOpacity>
-              <Icon name="heart" size={20} color={colors.black} />
-            </TouchableOpacity>
+          <FavHeart item={item}/>
           </View>
         </View>
         <Text style={styles.catagroy}>{item.category}</Text>

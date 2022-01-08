@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
+  FlatList
 } from 'react-native';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
@@ -15,7 +16,6 @@ import IconF from 'react-native-vector-icons/Feather';
 import { useSelector } from 'react-redux';
 import { selectCartItems, selectTotal } from '../redux/cart/cartRedux';
 import CartItem from '../components/cartItem/cartItem';
-import { FlatList } from 'react-native-gesture-handler';
 
 const width = Dimensions.get('window').width;
 
@@ -26,35 +26,56 @@ const CartScreen = ({ navigation }) => {
   const renderItem = ({ item }) => {
     return <CartItem item={ item}/>
   }
+
+  const navigateToInstruction = () => {
+    if (items.length) {
+      navigation.navigate('InstructionScreen');
+    }
+  }
+  const navigateToAddress = () => {
+    if (items.length) {
+      navigation.navigate('AddressScreen');
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-        <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <IconF name="chevron-left" size={40} color={colors.black} />
-          </TouchableOpacity>
-          <View style={styles.topNavCenter}>
-            <Icon name="handbag" size={30} color={colors.black} />
+      <View style={styles.topNav}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <IconF name="chevron-left" size={40} color={colors.black} />
+        </TouchableOpacity>
+        <View style={styles.topNavCenter}>
+          <Icon name="handbag" size={30} color={colors.black} />
           <Text style={styles.topNavText}> R {total}.00</Text>
-          </View>
-          <Icon name="options-vertical" size={30} color={colors.black} />
         </View>
-        <View style={styles.aside}>
-          <Text style={styles.asideText}>
-            there are currently<Text style={{ color: colors.yellow }}> {items.length}</Text> items in
-            cart
-          </Text>
-        </View>
-        <FlatList data={items} keyExtractor={item => item._id} renderItem={renderItem}/>
+        <Icon name="options-vertical" size={30} color={colors.black} />
+      </View>
+      <View style={styles.aside}>
+        <Text style={styles.asideText}>
+          there {items.length === 1 ? 'is' : 'are'} currently
+          <Text style={{color: colors.yellow}}> {items.length}</Text>{' '}
+          {items.length === 1 ? 'item' : 'items'} in cart
+        </Text>
+      </View>
+      <FlatList
+        data={items}
+        keyExtractor={item => item._id}
+        renderItem={renderItem}
+      />
       <View style={styles.botttomNav}>
-        <View style={[styles.botttomNavBtn, {backgroundColor: colors.yellow}]}>
-          <Text style={styles.botttomNavBtnInnerText}>
-            Add instructions to chef
-          </Text>
-        </View>
-        <View style={styles.botttomNavBtn}>
+        <TouchableOpacity
+          style={[
+            styles.botttomNavBtn,
+            {backgroundColor: colors.yellow, opacity: items.length ? 1 : 0.6},
+          ]}
+          onPress={navigateToInstruction}>
+          <Text style={styles.botttomNavBtnInnerText}>Add instructions</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={navigateToAddress}
+          style={[styles.botttomNavBtn, {opacity: items.length ? 1 : 0.6}]}>
           <Text style={styles.botttomNavBtnInnerText}> Order Now</Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,43 +7,87 @@ import {
   StyleSheet,
   SafeAreaView,
   Dimensions,
-    TouchableOpacity,
-  TextInput
+  TouchableOpacity,
+  TextInput,
+  Alert,
+  FlatList
 } from 'react-native';
-import {colors} from '../colors/colors';
+
+
+import { colors } from '../colors/colors';
 import {fontSize} from '../typography/typography';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
-import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
-import IncrementDecrementButton from '../components/buttons/incrementDecrementButton';
-import CartSection from '../components/cartSection/cartSectionComponent';
+import { axiosGet, baseUrl } from '../axios/axios';
+import PopUPModal from '../components/modal/modal';
 import SearchItem from '../components/searchItem/searchItem';
 
 const width = Dimensions.get('window').width;
 
-const img1 = require('../assests/images/img2.png');
-
 const SearchScreen = ({navigation}) => {
+  const [searchTerm, setTerm] = useState('');
+  const [items, setItems] = useState([]);
+  const [modalVisible,setVisible] = useState(false)
+  const [msg, setMsg] = useState('')
+  
+  const renderheading = () => {
+    if (items.length && searchTerm.length > 3) {
+      return (
+        <Text style={styles.asideText}>
+          You Searched For<Text style={{ color: colors.yellow }}> { searchTerm}</Text>{' '}
+          And
+          <Text style={{color: colors.yellow}}> {items.length}</Text> Results
+          Are Found
+        </Text>
+      );
+    } else  {
+      return (
+        <Text style={styles.asideText}>
+          Search for your favorite meals, desserts, drinks etc.
+        </Text>
+      );
+    }
+  };
+  const onSubmit = async ({nativeEvent: {eventCount, target, text,key}}) => {
+    if (text.length < 4) {
+      setMsg('oops, your characters should atleast be 4 characters long');
+      setVisible(true)
+      return;
+    }
+    const data = await axiosGet(`search-products?term=${searchTerm}`);
+    if (data.msg) {
+         setMsg(data.msg);
+      setVisible(true);
+    } else {
+      setItems(data)
+    }
+  };
+
+  const renderResults = ({ item }) => {
+    return <SearchItem item={item} />
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-        <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <IconF name="chevron-left" size={40} color={colors.black} />
-          </TouchableOpacity>
-           <TextInput style={styles.textInput} placeholder='What are you looking for?' autoFocus/>
-        </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.aside}>
-          <Text style={styles.asideText}>
-            You Searched For<Text style={{color: colors.yellow}}> sea Food</Text> And
-            <Text style={{color: colors.yellow}}> 5</Text> Results Are Found
-          </Text>
-              </View>
-              
-      
-            
-      </ScrollView>
+      <View style={styles.topNav}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <IconF name="chevron-left" size={40} color={colors.black} />
+        </TouchableOpacity>
+        <TextInput
+          value={searchTerm}
+          onChangeText={setTerm}
+          style={styles.textInput}
+          onSubmitEditing={onSubmit}
+          placeholder="What are you looking for?"
+          autoFocus
+          returnKeyType="search"
+        />
+      </View>
+      <View showsVerticalScrollIndicator={false}>
+        <View style={styles.aside}>{renderheading()}</View>
+        <FlatList data={items} renderItem={renderResults} keyExtractor={(item)=> item._id }/>
+    <PopUPModal msg={msg} visible={modalVisible} setVisible={(bool) => setVisible(bool)}/>
+      </View>
     </SafeAreaView>
   );
 };
@@ -79,8 +123,8 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 100,
     flex: 1,
-      paddingHorizontal: 15,
-    fontSize:fontSize.normal
+    paddingHorizontal: 15,
+    fontSize: fontSize.normal,
   },
   aside: {
     width: width * 0.95,
@@ -96,8 +140,6 @@ const styles = StyleSheet.create({
     color: colors.black,
     textAlign: 'center',
   },
-
- 
 });
 
 export default SearchScreen;

@@ -70,7 +70,7 @@ const CartItem = ({ item}) => {
               />
             </View>
             <TouchableOpacity style={styles.delete} onPress={remove}>
-              <IconM name="trash-can" size={30} color={'#fff'} />
+              <IconM name="trash-can" size={30} color={colors.grey} />
             </TouchableOpacity>
           </View>
         </View>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   delete: {
-    backgroundColor: colors.red,
+    // backgroundColor: colors.red,
   },
 });
 

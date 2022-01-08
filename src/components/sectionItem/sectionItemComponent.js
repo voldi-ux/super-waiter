@@ -13,14 +13,17 @@ import IconF from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { fontSize } from '../../typography/typography';
 import {baseUrl } from '../../axios/axios'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../../redux/cart/cartRedux';
+import { selectUserId } from '../../redux/userRedux/userSlice';
+import FavHeart from '../FavouriteHeart/Heart';
 const width = Dimensions.get('window').width;
 
 const SectionItem = ({ item }) => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
-  
+  const userId = useSelector(selectUserId)
+
   const addToCart = () => {
     dispatch(
       addItem({
@@ -46,9 +49,7 @@ const SectionItem = ({ item }) => {
           flexDirection: 'row',
         }}>
         <View></View>
-        <TouchableOpacity>
-          <IconF name="heart" size={20} color={colors.black} />
-        </TouchableOpacity>
+         <FavHeart item={item}/>
       </View>
 
       <Image source={{uri:`${baseUrl}${item.imagePath}`}} resizeMode="contain" style={styles.img} />

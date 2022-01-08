@@ -28,10 +28,8 @@ const SignInScreen = ({navigation}) => {
   const [err, setErr] = useState(null);
 
   const signIn = async () => {
-      console.log('signing in 1');
 
     if (email.length && password.length) {
-      console.log('signing in 2')
       const resp = await axiosPost('sign-in', {email, password});
       if (resp.msg) return setErr(resp.msg);
       return dispatch(logIn(resp));

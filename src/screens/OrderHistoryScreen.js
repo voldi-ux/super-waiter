@@ -14,8 +14,6 @@ import {fontSize} from '../typography/typography';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
-import IncrementDecrementButton from '../components/buttons/incrementDecrementButton';
-import FavoriteSection from '../components/favoriteSection/favoriteSection';
 import OrderHistoryItem from '../components/orderHistoryItem/orderHistoryItem';
 
 const width = Dimensions.get('window').width;
@@ -28,7 +26,7 @@ const OrderHistoryScreen = ({navigation}) => {
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <IconF name="chevron-left" size={40} color={colors.black} />
           </TouchableOpacity>
           <IconM name="history" size={40} color={colors.black} />

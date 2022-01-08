@@ -22,19 +22,33 @@ const DrawerContent = ({ navigation }) => {
         resizeMode="stretch"
         style={styles.img}
       />
-      <TouchableOpacity style={styles.drawerItem}>
+      <TouchableOpacity
+        style={styles.drawerItem}
+        onPress={() => navigation.navigate('Cart')}>
         <Icon name="handbag" size={30} color={colors.yellow} />
         <Text style={styles.label}>Your cart</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.drawerItem}>
-        <IconM name="heart" size={30} color={colors.red} />
-        <Text style={styles.label}>Favourite</Text>
+      <TouchableOpacity
+        style={styles.drawerItem}
+        onPress={() => navigation.navigate('OrderScreen')}>
+        <Icon name="handbag" size={30} color={colors.yellow} />
+        <Text style={styles.label}>Your orders</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.drawerItem}>
+      <TouchableOpacity
+        style={styles.drawerItem}
+        onPress={() => navigation.navigate('Favorite')}>
+        <IconM name="heart" size={30} color={colors.red} />
+        <Text style={styles.label}>Favourites</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.drawerItem}
+        onPress={() => navigation.navigate('OrderHistoryScreen')}>
         <IconM name="history" size={30} color={colors.black} />
         <Text style={styles.label}>Order history</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.drawerItem}>
+      <TouchableOpacity
+        style={styles.drawerItem}
+        onPress={() => navigation.navigate('AccountScreen')}>
         <IconM name="account" size={30} color={colors.blue} />
         <Text style={styles.label}>Your Account</Text>
       </TouchableOpacity>
@@ -46,7 +60,9 @@ const DrawerContent = ({ navigation }) => {
         <IconAD name="appstore1" size={25} color={colors.orange} />
         <Text style={styles.label}>About</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.drawerItem} onPress = {() => dispatch(logOut())}>
+      <TouchableOpacity
+        style={styles.drawerItem}
+        onPress={() => dispatch(logOut())}>
         <Icon name="logout" size={25} color={colors.purple} />
         <Text style={styles.label}>Log out</Text>
       </TouchableOpacity>
@@ -59,7 +75,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         padding: 10,
-        backgroundColor: colors.background_top,
+        // backgroundColor: colors.background_top,
         marginBottom:10
     },
   img: {

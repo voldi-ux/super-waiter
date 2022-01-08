@@ -3,16 +3,15 @@ import axios from 'axios';
 
 export const baseUrl =
   Platform.OS == 'android'
-    ? 'http://192.168.43.12:4000'
+    ? 'http://10.0.2.2:4000'
     : 'http://localhost:4000/';
 
 export const axiosGet = async url => {
   try {
     const resp = await axios.get(`${baseUrl}/${url}`);
-    return resp.data;
+    return resp.data
   } catch (error) {
-    console.log(error);
-    Alert.alert('to load new content make sure you have internet connection');
+    Alert.alert('oops are you sure you have an internet connection');
   }
 };
 
@@ -21,6 +20,7 @@ export const axiosPost = async (url, data) => {
     const resp = await axios.post(`${baseUrl}/${url}`, data);
     return resp.data;
   } catch (error) {
-    console.log(error);
+        Alert.alert('oops are you sure you have an internet connection');
+
   }
 };

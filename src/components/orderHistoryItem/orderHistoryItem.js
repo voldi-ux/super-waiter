@@ -3,23 +3,16 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
-  Dimensions,
   TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
-import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
-import IncrementDecrementButton from '../buttons/incrementDecrementButton';
 
 import {colors} from '../../colors/colors';
 import {fontSize} from '../../typography/typography';
 import CartButton from '../buttons/cartButton';
 
-const width = Dimensions.get('window').width;
-const img = require('../../assests/images/img.png');
 
 const OrderHistoryItem = () => {
   const navigation = useNavigation();

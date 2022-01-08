@@ -28,6 +28,7 @@ import {
 import { store } from '../redux/store/store';
 import PopUPModal from '../components/modal/modal';
 import Count from '../components/cartItemCount/count';
+import { selectVisible,setModalVisibilty } from '../redux/cart/cartRedux';
 
 const width = Dimensions.get('window').width;
 
@@ -37,9 +38,8 @@ const HomeScreen = ({navigation}) => {
   // const categories = useSelector(selectCategories);
   const recomended = useSelector(selectRecomended);
   const hot = useSelector(selectHot);
-  const navigateTo = screenName => {
-    navigation.navigate(screenName);
-  };
+  const modalVisible = useSelector(selectVisible)
+
   const renderMenu = ({item}) => {
     return (
       <TouchableOpacity onPress={() => navigation.navigate('CategoryScreen', {
@@ -83,7 +83,9 @@ const HomeScreen = ({navigation}) => {
         </View>
         <Section title={'Hot stuff this week'} items={hot} />
         <Section title={'for you '} items={recomended} />
-        <PopUPModal msg='The item you are trying to add is already in cart'/>
+        <PopUPModal msg='The item you are trying to add is already in cart' visible={modalVisible} setVisible={(bool) => {
+          dispatch(setModalVisibilty(bool))
+        }}/>
       </ScrollView>
     </SafeAreaView>
   );

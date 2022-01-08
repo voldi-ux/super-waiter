@@ -50,7 +50,7 @@ export const removeCartItem = (items, id) => {
   return items.filter(ITEM => ITEM._id !== id);
 };
 
-export const getCartTotal = function (items) {
+export const getCartTotal =  (items) => {
   let total = 0;
 
   for (let i = 0; i < items.length; i++) {
@@ -62,4 +62,19 @@ export const getCartTotal = function (items) {
   }
 
   return total;
+};
+
+
+export const addInstruction = (state, instruction) => {
+  state.orderInstrunction = instruction;
+  return state;
+}
+
+
+export const countInstructionWords = string => {
+  const wordCount = string
+    .trim()
+    .split(' ')
+    .filter(word => word !== '').length;
+  return wordCount;
 };

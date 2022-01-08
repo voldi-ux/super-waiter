@@ -1,3 +1,4 @@
+//this screen should show  the list of all the current orders of the user i.e orders that are not completed 
 import React from 'react';
 import {
   View,
@@ -8,26 +9,18 @@ import {
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
-  FlatList
 } from 'react-native';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useSelector } from 'react-redux';
-import { selectFavs } from '../redux/userRedux/userSlice';
-import FavoriteItem from '../components/favoriteItem/favoriteItem';
-
-const width = Dimensions.get('window').width;
+import OrderItem from '../components/orderItem/orderItem';
 
 
-const FavoriteScreen = ({ navigation }) => {
-  const favs = useSelector(selectFavs)
 
-  const renderFavs = ({ item }) => {
-    return <FavoriteItem item={item}/>
-  }
+const OrderScreen = ({ navigation }) => {
+    //when the component mounts or renders fetch all the orders related to this current user
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
@@ -35,16 +28,14 @@ const FavoriteScreen = ({ navigation }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <IconF name="chevron-left" size={40} color={colors.black} />
           </TouchableOpacity>
-            <IconM name="heart" size={30} color={colors.red} />
-          <Icon name="options-vertical" size={30} color={colors.black} />
+          <IconM name="history" size={40} color={colors.black} />
+          <View></View>
         </View>
-        <View style={styles.aside}>
-          <Text style={styles.asideText}>
-            there are <Text style={{ color: colors.yellow }}>{favs.length }</Text> items in
-            favorites
-          </Text>
-        </View>
-        <FlatList data={favs} keyExtractor={item => item._id} renderItem={renderFavs} />
+      <View>
+         <OrderItem status={'delivering'}/>
+         <OrderItem status={'preparing'}/>
+         <OrderItem status={'on the way'}/>
+      </View>
     </SafeAreaView>
   );
 };
@@ -63,7 +54,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    flexDirection: 'row',
+      flexDirection: 'row',
+    marginBottom:20,
   },
   topNavCenter: {
     display: 'flex',
@@ -78,11 +70,10 @@ const styles = StyleSheet.create({
     color: colors.yellow,
   },
   aside: {
-    width: width * 0.95,
     backgroundColor: colors.background_top,
     padding: 10,
     borderRadius: 100,
-    marginVertical: 20,
+    marginTop: 20,
   },
 
   asideText: {
@@ -92,7 +83,6 @@ const styles = StyleSheet.create({
     color: colors.black,
     textAlign: 'center',
   },
-
 });
 
-export default FavoriteScreen;
+export default OrderScreen;

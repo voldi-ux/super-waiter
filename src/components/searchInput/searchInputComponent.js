@@ -1,13 +1,10 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Dimensions } from 'react-native'
+import { View, TextInput, StyleSheet } from 'react-native'
 import {useNavigation} from '@react-navigation/native';
 import IconF from 'react-native-vector-icons/Feather';
 
 import { colors } from '../../colors/colors';
-import { fontSize } from '../../typography/typography';
 
-
-const width = Dimensions.get('window').width
 const SearchInput = () => {
   const navigation = useNavigation();
 
