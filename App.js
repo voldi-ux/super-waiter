@@ -1,11 +1,9 @@
-import React,{useState} from 'react';
-import {View, Text,Dimensions} from 'react-native';
+import React, {useState,useEffect} from 'react';
+import {View, Text, Dimensions} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {
-  createDrawerNavigator,
-} from '@react-navigation/drawer';
-import {Provider, useDispatch, useSelector} from 'react-redux'
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {Provider, useDispatch, useSelector} from 'react-redux';
 
 import HomeScreen from './src/screens/HomeScreen';
 import ItemViewScreen from './src/screens/ItemViewScreen';
@@ -20,10 +18,10 @@ import OnboardScreen from './src/screens/OnboardScreen';
 
 import DrawerContent from './src/components/drawerContent/drawerContent';
 
-import { store } from './src/redux/store/store'
-import { selectUser } from './src/redux/userRedux/userSlice';
-import { axiosGet } from './src/axios/axios';
-import {getData} from './src/redux/appData/appData'
+import {store} from './src/redux/store/store';
+import {selectUser} from './src/redux/userRedux/userSlice';
+import {axiosGet} from './src/axios/axios';
+import {getData} from './src/redux/appData/appData';
 import CategoryScreen from './src/screens/CategoryScreen';
 import OrderScreen from './src/screens/OrderScreen';
 import InstructionScreen from './src/screens/InstructionScreen';
@@ -36,16 +34,16 @@ const Stack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
-
-
 function AppDrawer() {
   return (
-    <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />} screenOptions={{
-      drawerStyle: {
-        width:width*.7
-      },
-      drawerType:'slide'
-    }} >
+    <Drawer.Navigator
+      drawerContent={props => <DrawerContent {...props} />}
+      screenOptions={{
+        drawerStyle: {
+          width: width * 0.7,
+        },
+        drawerType: 'slide',
+      }}>
       <Drawer.Screen
         name="HomeScreen"
         component={HomeScreen}
@@ -56,15 +54,21 @@ function AppDrawer() {
 }
 
 const App = () => {
-  const user = useSelector(selectUser)
-  const dispatch = useDispatch()
-  useState(() => {
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+//   initStripe({
+//    publishableKey:key
+//  })
+  useEffect(() => {
     const fetchData = async () => {
-      const data = await axiosGet('get-products')
-       dispatch(getData(data))
-    }
-    fetchData()
-  },[])
+      const data = await axiosGet('get-products');
+      dispatch(getData(data));
+    };
+    fetchData();
+
+
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="AppDrawer">
@@ -156,11 +160,11 @@ const App = () => {
 };
 
 const AppWrapper = () => {
-      
-return  <Provider store={store}>
-                <App />
-        </Provider>
-
-}
+  return (
+    <Provider store={store}>
+        <App />
+    </Provider>
+  );
+};
 
 export default AppWrapper;
