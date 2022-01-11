@@ -73,6 +73,7 @@ const ItemViewScreen = ({navigation, route}) => {
       navigation.goBack();
     } else {
       dispatch(addItem(ITEM));
+      navigation.goBack();
     }
   };
 

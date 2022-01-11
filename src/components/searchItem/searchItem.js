@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{memo} from 'react';
 import {
   View,
   Text,
@@ -55,14 +55,14 @@ const SearchItem = ({item}) => {
               <IconM name="star" size={25} color={colors.yellow} />
               <Text style={styles.rating}> 4.5 {'     '}</Text>
             </View>
-          <FavHeart item={item}/>
+            <FavHeart item={item} />
           </View>
         </View>
-        <Text style={styles.catagroy}>{item.category}</Text>
         <View style={[styles.flex]}>
           <Text style={styles.price}>R {item.price}.00</Text>
-          <CartButton title="add to cart" onPress={addToCart} />
+          <Text style={styles.category}>{item.category}</Text>
         </View>
+        <CartButton title="add to cart" onPress={addToCart} />
       </View>
     </TouchableOpacity>
   );
@@ -88,8 +88,8 @@ const styles = StyleSheet.create({
   },
   img: {
     height: 100,
-    width:120,
-    alignSelf:"center"
+    width: 120,
+    alignSelf: 'center',
   },
   heading: {
     fontSize: fontSize.large,
@@ -106,13 +106,9 @@ const styles = StyleSheet.create({
     fontSize: fontSize.normal,
     color: colors.blue_dark,
   },
-  bottom: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  delete: {
-    backgroundColor: colors.red,
+  category: {
+    textTransform: 'capitalize',
   },
 });
 
-export default SearchItem;
+export default memo(SearchItem);

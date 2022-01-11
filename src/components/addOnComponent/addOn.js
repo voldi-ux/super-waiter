@@ -6,7 +6,6 @@ import {fontSize} from '../../typography/typography';
 
 const AddOn = ({addOn, addOns, add, remove}) => {
   const addOnAdded = addOns.some(add => add.name === addOn.name);
-  console.log(addOns)
   return (
     <View style={[styles.addOn, {opacity: addOnAdded ? 0.6 : 1}]}>
           <Text style={styles.addOnTxt}>{addOn.name}</Text>

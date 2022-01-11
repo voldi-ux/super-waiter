@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
+import React,{memo} from 'react';
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity,Pressable,UIManager,LayoutAnimation } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,14 +16,25 @@ import {
 
 
 import { addItem } from '../../redux/cart/cartRedux';
+import SwipeToRemove from '../swipeToRemove/SwipeToRemove';
+
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
 
 const FavoriteItem = ({ item}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch()
   const userId = useSelector(selectUserId);
-  const removeFavItem = async (type,item,userId) => { 
-    const resp = await axiosPost(`update-user-favorites`, { type, item, userId });
-    return resp
+
+  const removeFavItem = async () => { 
+    const resp = await axiosPost(`update-user-favorites`, { type: "remove", itemId:item._id, userId });
+    dispatch(removeItemFromFav(resp));
+     LayoutAnimation.spring()
   };
   
  const addToCart = () => {
@@ -35,45 +46,45 @@ const FavoriteItem = ({ item}) => {
       }),
     );
   };
+
   return (
-    <TouchableOpacity
-      style={[styles.container]}
-      onPress={() =>
-        navigation.navigate('ItemView', {
-          _id: item._id,
-          category: item.category,
-          qty: 1,
-        })
-      }>
-      <Image
-        source={{uri: `${baseUrl}${item.imagePath}`}}
-        style={styles.img}
-        resizeMode="contain"
-      />
-      <View style={styles.containerRight}>
-        <View style={[styles.headingsTop, styles.flex]}>
-          <Text style={styles.heading}>{item.name}</Text>
+    <SwipeToRemove remove={removeFavItem}>
+      <Pressable
+        style={[styles.container]}
+        onPress={() =>
+          navigation.navigate('ItemView', {
+            _id: item._id,
+            category: item.category,
+            qty: 1,
+          })
+        }>
+        <Image
+          source={{uri: `${baseUrl}${item.imagePath}`}}
+          style={styles.img}
+          resizeMode="contain"
+        />
+        <View style={styles.containerRight}>
+          <View style={[styles.headingsTop, styles.flex]}>
+            <Text style={styles.heading}>{item.name}</Text>
+            <View style={[styles.flex]}>
+              <IconM name="star" size={20} color={colors.yellow} />
+              <Text style={styles.rating}> 4.5</Text>
+            </View>
+          </View>
+          <Text style={styles.price}>R {item.price}.00</Text>
           <View style={[styles.flex]}>
-            <IconM name="star" size={20} color={colors.yellow} />
-            <Text style={styles.rating}> 4.5</Text>
+            <View>
+              <CartButton title="add to cart" onPress={addToCart} />
+            </View>
+            <TouchableOpacity
+              style={styles.delete}
+              onPress={removeFavItem}>
+              <IconM name="trash-can" size={30} color={colors.grey} />
+            </TouchableOpacity>
           </View>
         </View>
-        <Text style={styles.price}>R {item.price}.00</Text>
-        <View style={[styles.flex]}>
-          <View>
-            <CartButton title="add to cart" onPress={addToCart} />
-          </View>
-          <TouchableOpacity
-            style={styles.delete}
-            onPress={async () => {
-              const resp = await removeFavItem('remove', item._id, userId);
-              dispatch(removeItemFromFav(resp));
-            }}>
-            <IconM name="trash-can" size={30} color={colors.grey} />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </TouchableOpacity>
+      </Pressable>
+    </SwipeToRemove>
   );
 };
 
@@ -86,11 +97,11 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: colors.background_top,
-    // padding: 5,
+    padding: 5,
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: 10,
+
   },
   containerRight: {
     flex: 1,
@@ -124,4 +135,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FavoriteItem;
+export default (FavoriteItem);

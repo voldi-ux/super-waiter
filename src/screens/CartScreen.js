@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {
   View,
   Text,
@@ -13,16 +13,21 @@ import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
-import { useSelector } from 'react-redux';
-import { selectCartItems, selectTotal } from '../redux/cart/cartRedux';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearCart, selectCartItems, selectTotal } from '../redux/cart/cartRedux';
 import CartItem from '../components/cartItem/cartItem';
+import Options from '../components/optionsComponent/options';
+import { logOut } from '../redux/userRedux/userSlice';
 
 const width = Dimensions.get('window').width;
 
 
 const CartScreen = ({ navigation }) => {
-  const items = useSelector(selectCartItems)
-  const total = useSelector(selectTotal)
+  const items = useSelector(selectCartItems);
+  const total = useSelector(selectTotal);
+  const [optionsVisible, setOptionsVisible] = useState(false)
+  const dispatch = useDispatch()
+  
   const renderItem = ({ item }) => {
     return <CartItem item={ item}/>
   }
@@ -37,6 +42,55 @@ const CartScreen = ({ navigation }) => {
       navigation.navigate('AddressScreen');
     }
   }
+
+  const closeOptions = () => {
+    setOptionsVisible(false)
+  }
+  
+  const openOptions = () => {
+    setOptionsVisible(true)
+  }
+  const cartOptions = [
+    {
+      title: 'clear cart',
+      onPress: () => {
+        dispatch(clearCart())
+      },
+    },
+
+    {
+      title: 'go to favorites',
+      onPress: () => {
+        navigation.navigate('Favorite');
+      },
+    },
+    {
+      title: 'go to orders',
+      onPress: () => {
+        navigation.navigate('OrderScreen');
+      },
+    },
+    {
+      title: 'go to orders history',
+      onPress: () => {
+        navigation.navigate('OrderHistoryScreen');
+        
+      },
+    },
+    {
+      title: 'go to account',
+      onPress: () => navigation.navigate('AccountScreen'),
+    },
+    {
+      title: 'log out',
+      onPress: () => {
+        dispatch(logOut())
+        dispatch(clearCart())
+      },
+    },
+  ];
+
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
@@ -48,7 +102,9 @@ const CartScreen = ({ navigation }) => {
           <Icon name="handbag" size={30} color={colors.black} />
           <Text style={styles.topNavText}> R {total}.00</Text>
         </View>
-        <Icon name="options-vertical" size={30} color={colors.black} />
+        <TouchableOpacity onPress={openOptions}>
+          <Icon name="options-vertical" size={30} color={colors.black} />
+        </TouchableOpacity>
       </View>
       <View style={styles.aside}>
         <Text style={styles.asideText}>
@@ -61,6 +117,7 @@ const CartScreen = ({ navigation }) => {
         data={items}
         keyExtractor={item => item._id}
         renderItem={renderItem}
+        style={{flex: 1}}
       />
       <View style={styles.botttomNav}>
         <TouchableOpacity
@@ -73,10 +130,27 @@ const CartScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={navigateToAddress}
-          style={[styles.botttomNavBtn, {opacity: items.length ? 1 : 0.6}]}>
+          style={[
+            styles.botttomNavBtn,
+            {opacity: items.length ? 1 : 0.6},
+            {
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 10},
+              shadowOpacity: 0.9,
+              shadowRadius: 5,
+              elevation: 5,
+            },
+          ]}>
           <Text style={styles.botttomNavBtnInnerText}> Order Now</Text>
         </TouchableOpacity>
       </View>
+      {optionsVisible && (
+        <Options
+          options={cartOptions}
+          close={closeOptions}
+          visible={optionsVisible}
+        />
+      )}
     </SafeAreaView>
   );
 };

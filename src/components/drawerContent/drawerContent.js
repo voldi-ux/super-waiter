@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconAD from 'react-native-vector-icons/AntDesign';
+import IconI from 'react-native-vector-icons/Ionicons';
 
 import { fontSize } from '../../typography/typography';
 import { colors } from '../../colors/colors';
@@ -31,7 +32,11 @@ const DrawerContent = ({ navigation }) => {
       <TouchableOpacity
         style={styles.drawerItem}
         onPress={() => navigation.navigate('OrderScreen')}>
-        <Icon name="handbag" size={30} color={colors.yellow} />
+        <IconI
+          name="fast-food"
+          size={30}
+          color={colors.orange}
+        />
         <Text style={styles.label}>Your orders</Text>
       </TouchableOpacity>
       <TouchableOpacity

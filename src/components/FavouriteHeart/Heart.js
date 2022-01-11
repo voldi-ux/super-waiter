@@ -22,7 +22,10 @@ const FavHeart = ({item}) => {
   const dispatch = useDispatch();
 
   const toggleFavItem = async (type, item, userId) => { 
-    const resp = await axiosPost(`update-user-favorites`, { type, item, userId });
+    //if item is a string then its a propbaly an id of an item.
+    const data = typeof item === 'string' ? { type, itemId: item, userId } : { type, item, userId }
+    
+    const resp = await axiosPost(`update-user-favorites`, data);
     return resp
   };
   
@@ -31,6 +34,7 @@ const FavHeart = ({item}) => {
       onPress={async () => {
         if (inFav) {
           const resp = await toggleFavItem('remove', item._id, userId)
+          console.log(resp)
           dispatch(removeItemFromFav(resp));
         } else {
           

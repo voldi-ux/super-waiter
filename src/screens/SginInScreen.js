@@ -53,7 +53,6 @@ const SignInScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <IconF name="chevron-left" size={40} color={colors.black} />
@@ -65,6 +64,7 @@ const SignInScreen = ({navigation}) => {
           <Text style={styles.heading}>Sign in now</Text>
           {err ? <ErrorComponent msg={err} /> : null}
           <TextInputComponent
+            autoFocus
             label="Email"
             onChangeText={text => handleChange(text, 'email')}
           />
@@ -92,7 +92,7 @@ const SignInScreen = ({navigation}) => {
             <AccountButton title="sign in" iconName="login" onPress={signIn} />
           </View>
         </View>
-      </ScrollView>
+
     </SafeAreaView>
   );
 };
@@ -108,6 +108,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginTop: 40,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 10},
+    shadowOpacity: 0.9,
+    shadowRadius: 5,
+    elevation: 5,
   },
   topNav: {
     display: 'flex',

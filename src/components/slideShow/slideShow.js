@@ -5,10 +5,11 @@ const Slide1 = require('../../assests/images/slide.jpg');
 const Slide2 = require('../../assests/images/slide-2.jpg');
 const Slide3 = require('../../assests/images/slide-3.jpg');
 
-//the react-native slideshow package should be modified after npm install. comment out the controlls sections and the image's height and width should come from props.
+//the react-native slideshow package should be modified after npm install. replace the codes in its main files with the codes in slideshowPlaceHolder.js file.
 
 const width = Dimensions.get('window').width;
-
+const height = Dimensions.get('window').height;
+console.log(width,height)
 export default class SlideshowHeader extends Component {
   constructor(props) {
     super(props);
@@ -50,7 +51,7 @@ export default class SlideshowHeader extends Component {
   render() {
     return (
       <Slideshow
-        height={250}
+        height={height*.3}
         width={width}
         dataSource={this.state.dataSource}
         position={this.state.position}

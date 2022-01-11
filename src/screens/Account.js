@@ -109,6 +109,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginTop: 40,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 10},
+    shadowOpacity: 0.9,
+    shadowRadius: 5,
+    elevation: 5,
   },
   topNav: {
     display: 'flex',
@@ -162,6 +167,12 @@ const styles = StyleSheet.create({
     width: '49%',
     padding: 10,
     borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 10},
+    shadowOpacity: 0.9,
+    shadowRadius: 5,
+    elevation: 5,
+    // marginBottom: 10,
   },
 
   dashboardTxtL: {

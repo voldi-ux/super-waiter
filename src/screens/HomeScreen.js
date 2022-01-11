@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef} from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
   Dimensions,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {colors} from '../colors/colors';
@@ -31,6 +32,7 @@ import Count from '../components/cartItemCount/count';
 import { selectVisible,setModalVisibilty } from '../redux/cart/cartRedux';
 
 const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 const HomeScreen = ({navigation}) => {
   const menus = ['starters', 'main', 'salads', 'drinks', 'desserts'];
@@ -39,6 +41,11 @@ const HomeScreen = ({navigation}) => {
   const recomended = useSelector(selectRecomended);
   const hot = useSelector(selectHot);
   const modalVisible = useSelector(selectVisible)
+
+  //animations values
+  const scrollY = useRef(new Animated.Value(0)).current
+
+
 
   const renderMenu = ({item}) => {
     return (
@@ -53,17 +60,35 @@ const HomeScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-        <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <IconF name="menu" size={40} color={colors.black} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+      <Animated.View
+        style={[
+          styles.topNav,
+          {
+            transform: [
+              {
+                translateY: scrollY.interpolate({
+                  inputRange: [0, height * 0.2, height*.4],
+                  outputRange: [0, -100, 0],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
+          },
+        ]}>
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <IconF name="menu" size={40} color={colors.black} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
           <Icon name="handbag" size={35} color={colors.black} />
           <Count />
-          </TouchableOpacity>
-        </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-
+        </TouchableOpacity>
+      </Animated.View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: false},
+        )}>
         {/* <HeaderComponent /> */}
         <SlideshowHeader />
         <SearchInput />
@@ -83,9 +108,13 @@ const HomeScreen = ({navigation}) => {
         </View>
         <Section title={'Hot stuff this week'} items={hot} />
         <Section title={'for you '} items={recomended} />
-        <PopUPModal msg='The item you are trying to add is already in cart' visible={modalVisible} setVisible={(bool) => {
-          dispatch(setModalVisibilty(bool))
-        }}/>
+        <PopUPModal
+          msg="The item you are trying to add is already in cart"
+          visible={modalVisible}
+          setVisible={bool => {
+            dispatch(setModalVisibilty(bool));
+          }}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -102,6 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
+ 
   },
 
   catagory: {

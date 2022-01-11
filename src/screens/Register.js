@@ -71,6 +71,7 @@ const RegisterScreen = ({ navigation }) => {
           <Text style={styles.heading}>create an account now</Text>
           {err ? <ErrorComponent msg={err} /> : null}
           <TextInputComponent
+            autoFocus
             label="Name"
             onChangeText={text => {
               handleChange(text, 'name');
@@ -142,6 +143,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginTop: 40,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 10},
+    shadowOpacity: 0.9,
+    shadowRadius: 5,
+    elevation: 5,
   },
   topNav: {
     display: 'flex',

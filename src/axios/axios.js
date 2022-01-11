@@ -2,9 +2,9 @@ import {Platform, Alert} from 'react-native';
 import axios from 'axios';
 
 export const baseUrl =
-  Platform.OS == 'android'
+  Platform.OS !== 'android'
     ? 'http://10.0.2.2:4000'
-    : 'http://localhost:4000/';
+    : 'http://localhost:4000';
 
 export const axiosGet = async url => {
   try {

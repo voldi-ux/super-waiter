@@ -40,7 +40,7 @@ function AppDrawer() {
       drawerContent={props => <DrawerContent {...props} />}
       screenOptions={{
         drawerStyle: {
-          width: width * 0.7,
+          width: width * 0.9,
         },
         drawerType: 'slide',
       }}>

@@ -38,6 +38,7 @@ const InstructionScreen = ({ navigation }) => {
           Alert.alert('instructions should at least have 5 words')
     } else {
       dispatch(setOrderInstruction(instructions))
+      navigation.navigate('Cart')
         }
   }
   return (

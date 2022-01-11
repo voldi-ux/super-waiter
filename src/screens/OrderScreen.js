@@ -12,9 +12,8 @@ import {
 } from 'react-native';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
-import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconM from 'react-native-vector-icons/Ionicons';
 import OrderItem from '../components/orderItem/orderItem';
 
 
@@ -24,17 +23,21 @@ const OrderScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-        <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <IconF name="chevron-left" size={40} color={colors.black} />
-          </TouchableOpacity>
-          <IconM name="history" size={40} color={colors.black} />
-          <View></View>
-        </View>
+      <View style={styles.topNav}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <IconF name="chevron-left" size={40} color={colors.black} />
+        </TouchableOpacity>
+        <IconM
+          name="fast-food"
+          size={40}
+          color={colors.black}
+        />
+        <View></View>
+      </View>
       <View>
-         <OrderItem status={'delivering'}/>
-         <OrderItem status={'preparing'}/>
-         <OrderItem status={'on the way'}/>
+        <OrderItem status={'delivering'} />
+        <OrderItem status={'preparing'} />
+        <OrderItem status={'on the way'} />
       </View>
     </SafeAreaView>
   );

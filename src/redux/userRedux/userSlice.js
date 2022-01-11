@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import User from './userUtilClass';
-
+import {axiosPost} from '../../axios/axios'
 
 //orders are all the previous orders of the user that which have completed and the oredred are the orders that have been not been completed.
 const initialState = {
@@ -35,10 +35,16 @@ const userSlice = createSlice({
 
         removeItemFromFav: (state,action) => {
           state = User.userRemoveFav(state,action.payload)
+        },
+       
+        clearUserFavs: (state, action) => {
+          state.favorites = []
         }
-
     }
 })
+
+export const { logIn, logOut, addItemToFav, removeItemFromFav,clearUserFavs } = userSlice.actions
+
 
 //selectors
 export const selectUser = state => state.user.info
@@ -48,5 +54,15 @@ export const selectOrders = ({user}) => user.orders;
 export const selectOrdered = ({user}) => user.ordered;
 
 
-export const { logIn,logOut,addItemToFav,removeItemFromFav } = userSlice.actions
+//thunks
+export const clearFavs = (userId) =>async dispatch => {
+  const resp = await axiosPost('clear-user-favorites', { userId });
+  console.log(resp)
+  if (resp.msg) {
+    return
+  }
+
+  dispatch(clearUserFavs())
+}
+
 export default userSlice.reducer

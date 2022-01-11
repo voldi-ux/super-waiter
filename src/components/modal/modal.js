@@ -13,7 +13,7 @@ const PopUPModal = ({msg,visible,setVisible}) => {
         transparent={true}
         visible={visible}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          setVisible(false);
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -39,9 +39,10 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: colors.yellow,
+
     borderRadius: 20,
-    padding: 35,
+    padding: 20,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 7,
     elevation: 2,
-    width: 100,
+    width: 120,
   },
   buttonClose: {
     backgroundColor: colors.black,
@@ -71,7 +72,9 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
-    fontSize: fontSize.normal,
+    fontWeight: 'bold',
+    fontSize: fontSize.large,
+    color: 'white',
   },
 });
 

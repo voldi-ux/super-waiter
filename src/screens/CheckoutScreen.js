@@ -15,8 +15,8 @@ import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
 import IconF from 'react-native-vector-icons/Feather';
 import AccountButton from '../components/buttons/accountButton';
-import {selectUser} from '../redux/userRedux/userSlice';
-import {selectCartItems, selectTotal} from '../redux/cart/cartRedux';
+import {selectUser, selectUserId} from '../redux/userRedux/userSlice';
+import {onOrderSuccesss, selectCartItems, selectInstruction, selectTotal} from '../redux/cart/cartRedux';
 import { axiosPost } from '../axios/axios'
 import {StripeProvider, initStripe} from '@stripe/stripe-react-native';
 
@@ -24,37 +24,55 @@ const key ='pk_test_51KFkqNLGGMwO7DWSduOaFyXxo43BPddJi8qPjYbWVfKJ8H5SteqL4LodsgH
 
 
 const CheckoutScreen = ({navigation}) => {
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  
   const address = useSelector(state => state.cart.address);
   const cartItems = useSelector(selectCartItems);
-   const {initPaymentSheet, presentPaymentSheet} = useStripe();
-  const user = useSelector(selectUser);
+  const userId = useSelector(selectUserId);
   const cartTotal = useSelector(selectTotal);
+  const instruction = useSelector(selectInstruction)
+
   const delevery = 75
-  const [loading, setLoading] = useState(false);
+  const order = {
+    userId,
+    orderNo: Math.floor((Date.now() * Math.random())+parseFloat(address.phone)),
+    total: delevery + cartTotal,
+    items: cartItems,
+    customerInfo: {
+      ...address
+    },
+    date: Date.now(),
+    instruction
+  };
+
   const getPayIntent = async () => {
     return await axiosPost('payment-intent', {
       total: (cartTotal + delevery)*100,
     });
   }
 
+  const placeOrder = async () => {
+    return await axiosPost('place-order',order)
+  }
+
   useEffect(() => {
-    initStripe({
-      publishableKey: key,
-    })
+    // initStripe({
+    //   publishableKey: key,
+    // })
   }, [])
   
   
   const initializePaymentSheet = async () => {
 
-    const {paymentIntent, ephemeralKey, customer} = await getPayIntent();
+    const {paymentIntentSecret} = await getPayIntent();
 
     const {error} = await initPaymentSheet({
-  
-      paymentIntentClientSecret: paymentIntent,
-      merchantDisplayName: 'Merchant Name',
+      paymentIntentClientSecret: paymentIntentSecret,
+      merchantDisplayName: 'super waiter',
     });
- console.log('error',error)
+
     if (!error) {
       setLoading(true);
     }
@@ -62,16 +80,26 @@ const CheckoutScreen = ({navigation}) => {
 
 
   useEffect(() => {
-    
     initializePaymentSheet();
-  },[])
+  }, [])
+  
+
  const openPaymentSheet = async () => {
    const {error} = await presentPaymentSheet()
 
    if (error) {
      Alert.alert(`Error code: ${error.code}`, error.message);
    } else {
-     Alert.alert('Success', 'Your order is confirmed!');
+     const resp = await placeOrder()
+     console.log(resp)
+     if (resp.msg) {
+      return Alert.alert(resp.msg);
+       
+     } else {
+        dispatch(onOrderSuccesss())
+       Alert.alert(resp.success);
+       navigation.navigate('AppDrawer');
+      }
    }
  };
 
@@ -85,7 +113,8 @@ const CheckoutScreen = ({navigation}) => {
       </View>
     ));
   return (
-      <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <StripeProvider publishableKey={key}>
         <StatusBar
           barStyle="dark-content"
           backgroundColor={colors.background}
@@ -101,6 +130,14 @@ const CheckoutScreen = ({navigation}) => {
           <View style={styles.items}>
             <Text style={styles.heading2}>Items</Text>
             {orderItems}
+          </View>
+          <View style={styles.items}>
+            <Text style={styles.heading2}>instruction</Text>
+            {instruction.length ? (
+              <Text style={styles.instruction}>{instruction}</Text>
+            ) : (
+              <Text style={styles.instruction}>no instructions</Text>
+            )}
           </View>
           <View style={styles.address}>
             <Text style={styles.heading2}>customer info & address</Text>
@@ -144,7 +181,8 @@ const CheckoutScreen = ({navigation}) => {
         <View style={styles.btn}>
           <AccountButton title="Pay now" onPress={openPaymentSheet} />
         </View>
-      </SafeAreaView>
+      </StripeProvider>
+    </SafeAreaView>
   );
 };
 
@@ -199,6 +237,11 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
     color: colors.grey,
   },
+  instruction: {
+    color: colors.grey,
+    fontSize: fontSize.normal,
+    marginBottom: 10,
+  },
   itemQty: {
     fontSize: fontSize.normal,
     color: colors.grey,
@@ -241,6 +284,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 10},
+    shadowOpacity: 0.9,
+    shadowRadius: 5,
+    elevation: 5,
   },
 });
 

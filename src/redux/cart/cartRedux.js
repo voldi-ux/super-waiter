@@ -1,14 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { updateCartItem,removeCartItem, addCartItem , increment,decrement, getCartTotal, addInstruction} from './cartUtils';
+import {createSlice} from '@reduxjs/toolkit';
+import {
+  updateCartItem,
+  removeCartItem,
+  addCartItem,
+  increment,
+  decrement,
+  getCartTotal,
+  addInstruction,
+} from './cartUtils';
 
 const initialState = {
   items: [],
-    modalVisible: false,
-    OrderTotal: 0,
-    orderInstrunction: '',
-    address:{}
+  modalVisible: false,
+  orderInstrunction: '',
+  address: {},
 };
-
 
 const cartSlice = createSlice({
   name: 'cart',
@@ -42,13 +48,18 @@ const cartSlice = createSlice({
     },
 
     setAddress: (state, action) => {
-      state.address = action.payload
-    }
+      state.address = action.payload;
+    },
+    onOrderSuccesss: (state, action) => {
+      state.orderInstrunction = '';
+      state.items = [];
+    },
+
+    clearCart: (state, action) => {
+      state.items = [];
+    },
   },
 });
-
-
-
 
 export const {
   addItem,
@@ -58,12 +69,18 @@ export const {
   updateItem,
   setModalVisibilty,
   setOrderInstruction,
-  setAddress
+  setAddress,
+  onOrderSuccesss,
+  clearCart
 } = cartSlice.actions;
 
 //selectors
 export const selectCartItems = ({cart: {items}}) => items;
 export const selectTotal = ({cart: {items}}) => getCartTotal(items);
-export const selectVisible = ({cart: {modalVisible}}) => modalVisible
+export const selectVisible = ({cart: {modalVisible}}) => modalVisible;
+export const selectInstruction = ({cart: {orderInstrunction}}) =>
+  orderInstrunction;
+
+//thunks
 
 export default cartSlice.reducer;

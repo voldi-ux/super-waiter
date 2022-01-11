@@ -71,6 +71,7 @@ const AddressScreen = ({navigation}) => {
           <Text style={styles.heading}>Enter your address</Text>
           {err ? <ErrorComponent msg={err} /> : null}
           <TextInputComponent
+            autoFocus
             label="Street"
             value={userInfo.street}
             onChangeText={text => {

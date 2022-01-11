@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{memo} from 'react';
 import {
   Image,
   Text,
@@ -83,12 +83,13 @@ const styles = StyleSheet.create({
   item: {
     marginTop: 20,
     backgroundColor: colors.background_top,
-    width: width * 0.35,
+    width: 180,
     padding: 15,
     borderRadius: 15,
     minHeight: 300,
     marginBottom: 10,
     marginRight: 20,
+    
   },
   img: {
     // width: width * 0.35,
@@ -115,4 +116,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SectionItem;
+export default memo(SectionItem);
