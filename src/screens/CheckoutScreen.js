@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Alert,
+  Vibration
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import {useStripe} from '@stripe/stripe-react-native'
@@ -96,7 +97,8 @@ const CheckoutScreen = ({navigation}) => {
       return Alert.alert(resp.msg);
        
      } else {
-        dispatch(onOrderSuccesss())
+       dispatch(onOrderSuccesss())
+       Vibration.vibrate(5000)
        Alert.alert(resp.success);
        navigation.navigate('AppDrawer');
       }
