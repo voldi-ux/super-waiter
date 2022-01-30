@@ -7,14 +7,16 @@ import {
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  SectionList,
+  Alert
 } from 'react-native';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearCart, selectCartItems, selectTotal } from '../redux/cart/cartRedux';
+import { clearCart, selectCartItems, selectInstruction, selectTotal } from '../redux/cart/cartRedux';
 import CartItem from '../components/cartItem/cartItem';
 import Options from '../components/optionsComponent/options';
 import { logOut } from '../redux/userRedux/userSlice';
@@ -26,6 +28,7 @@ const CartScreen = ({ navigation }) => {
   const items = useSelector(selectCartItems);
   const total = useSelector(selectTotal);
   const [optionsVisible, setOptionsVisible] = useState(false)
+  const instruction = useSelector(selectInstruction)
   const dispatch = useDispatch()
   
   const renderItem = ({ item }) => {
@@ -37,9 +40,22 @@ const CartScreen = ({ navigation }) => {
       navigation.navigate('InstructionScreen');
     }
   }
+
+
   const navigateToAddress = () => {
-    if (items.length) {
-      navigation.navigate('AddressScreen');
+    
+    if (items.length && !instruction) {
+      Alert.alert('confirm', 'would you like to add instructions?', [
+        {
+          text: 'No',
+          onPress: () => navigation.navigate('AddressScreen'),
+          style: 'cancel',
+        },
+        {text: 'Yes', onPress: () => navigation.navigate('InstructionScreen')},
+      ]);
+    } else if (items.length) {
+       navigation.navigate('AddressScreen');
+
     }
   }
 
@@ -103,17 +119,21 @@ const CartScreen = ({ navigation }) => {
           <Text style={styles.topNavText}> R {total}.00</Text>
         </View>
         <TouchableOpacity onPress={openOptions}>
-          <Icon name="options-vertical" size={30} color={colors.black} />
+          <Icon name="options-vertical" size={25} color={colors.black} />
         </TouchableOpacity>
       </View>
-      <View style={styles.aside}>
-        <Text style={styles.asideText}>
-          there {items.length === 1 ? 'is' : 'are'} currently
-          <Text style={{color: colors.yellow}}> {items.length}</Text>{' '}
-          {items.length === 1 ? 'item' : 'items'} in cart
-        </Text>
-      </View>
+
       <FlatList
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={() => (
+          <View style={styles.aside}>
+            <Text style={styles.asideText}>
+              there {items.length === 1 ? 'is' : 'are'} currently
+              <Text style={{color: colors.yellow}}> {items.length}</Text>{' '}
+              {items.length === 1 ? 'item' : 'items'} in cart
+            </Text>
+          </View>
+        )}
         data={items}
         keyExtractor={item => item._id}
         renderItem={renderItem}

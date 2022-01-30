@@ -8,6 +8,8 @@ import {
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
+  KeyboardAvoidingView,
+
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import {colors} from '../colors/colors';
@@ -43,6 +45,8 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const handleChange = (txt, type) => {
+    if (err) setErr(null);
+
     setInfo(prevState => {
       const newState = {...prevState};
       newState[type] = txt + ''
@@ -50,84 +54,81 @@ const RegisterScreen = ({ navigation }) => {
     });
   };
 
-  const resetValues = () => {
-    setEmail('');
-    setPassword('');
-    setErr(null);
-  };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <IconF name="chevron-left" size={40} color={colors.black} />
-          </TouchableOpacity>
-          <IconM name="account" size={40} color={colors.black} />
-          <View></View>
-        </View>
-        <View style={styles.containerInner}>
-          <Text style={styles.heading}>create an account now</Text>
-          {err ? <ErrorComponent msg={err} /> : null}
-          <TextInputComponent
-            autoFocus
-            label="Name"
-            onChangeText={text => {
-              handleChange(text, 'name');
-            }}
-          />
-          <TextInputComponent
-            label="Surname"
-            onChangeText={text => {
-              handleChange(text, 'surname');
-            }}
-          />
-          <TextInputComponent
-            label="Email"
-            keyboardType={'email-address'}
-            onChangeText={text => {
-              handleChange(text, 'email');
-            }}
-          />
-          <TextInputComponent
-            label="Phone"
-            keyboardType={'numeric'}
-            onChangeText={text => {
-              handleChange(text, 'phone');
-            }}
-          />
-          <TextInputComponent
-            label="Password"
-            secureTextEntry={true}
-            onChangeText={text => {
-              handleChange(text, 'password');
-            }}
-          />
-          <TextInputComponent
-            label="Confirm Password"
-            secureTextEntry={true}
-            onChangeText={text => {
-              handleChange(text, 'confirmPassword');
-            }}
-          />
-          <View style={styles.flex}>
-            <Text style={[styles.link, {color: colors.yellow}]}>
-              Already have an account?
-            </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('SignInScreen')}>
-              <Text style={[styles.link, {color: colors.blue}]}>
-                {' '}
-                Sign in instead
+      <View style={styles.topNav}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <IconF name="chevron-left" size={40} color={colors.black} />
+        </TouchableOpacity>
+        <IconM name="account" size={40} color={colors.black} />
+        <View></View>
+      </View>
+      {/* <KeyboardAvoidingView> */}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.containerInner}>
+            <Text style={styles.heading}>create an account now</Text>
+            {err ? <ErrorComponent msg={err} /> : null}
+            <TextInputComponent
+              autoFocus
+              label="Name"
+              onChangeText={text => {
+                handleChange(text, 'name');
+              }}
+            />
+            <TextInputComponent
+              label="Surname"
+              onChangeText={text => {
+                handleChange(text, 'surname');
+              }}
+            />
+            <TextInputComponent
+              label="Email"
+              keyboardType={'email-address'}
+              onChangeText={text => {
+                handleChange(text, 'email');
+              }}
+            />
+            <TextInputComponent
+              label="Phone"
+              keyboardType={'numeric'}
+              onChangeText={text => {
+                handleChange(text, 'phone');
+              }}
+            />
+            <TextInputComponent
+              label="Password"
+              secureTextEntry={true}
+              onChangeText={text => {
+                handleChange(text, 'password');
+              }}
+            />
+            <TextInputComponent
+              label="Confirm Password"
+              secureTextEntry={true}
+              onChangeText={text => {
+                handleChange(text, 'confirmPassword');
+              }}
+            />
+            <View style={styles.flex}>
+              <Text style={[styles.link, {color: colors.yellow}]}>
+                Already have an account?
               </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('SignInScreen')}>
+                <Text style={[styles.link, {color: colors.blue}]}>
+                  {' '}
+                  Sign in instead
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.btn}>
+              <AccountButton title="register" onPress={() => signUp()} />
+            </View>
           </View>
-          <View style={styles.btn}>
-            <AccountButton title="register" onPress={() => signUp()} />
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      {/* </KeyboardAvoidingView> */}
     </SafeAreaView>
   );
 };

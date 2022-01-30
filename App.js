@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Dimensions} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -27,6 +27,9 @@ import OrderScreen from './src/screens/OrderScreen';
 import InstructionScreen from './src/screens/InstructionScreen';
 import AddressScreen from './src/screens/Address';
 import CheckoutScreen from './src/screens/CheckoutScreen';
+import LogoScreen from './src/screens/LogoScree';
+import NoInternet from './src/components/noInternet/noInternet';
+import Loader from './src/components/Loader/Loader';
 
 const width = Dimensions.get('window').width;
 
@@ -54,115 +57,140 @@ function AppDrawer() {
 }
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
+  const [newtworErr, setNetworkErr] = useState(false);
+
   const user = useSelector(selectUser);
+
   const dispatch = useDispatch();
-//   initStripe({
-//    publishableKey:key
-//  })
+  //   initStripe({
+  //    publishableKey:key
+  //  })
+  const fetchData = async () => {
+    const resp = await axiosGet('get-products');
+    setLoading(false);
+    if (resp.err || resp.msg) {
+       setNetworkErr(true);
+    } else {
+      dispatch(getData(resp));
+    }
+  };
+  
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await axiosGet('get-products');
-      dispatch(getData(data));
-    };
     fetchData();
-
-
   }, []);
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="AppDrawer">
-        {user ? (
-          <>
-            <Stack.Screen
-              name="AppDrawer"
-              component={AppDrawer}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="ItemView"
-              component={ItemViewScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="Cart"
-              component={CartScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="Search"
-              component={SearchScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="Favorite"
-              component={FavoriteScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="OrderHistoryScreen"
-              component={OrderHistoryScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="AccountScreen"
-              component={AccountScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="CategoryScreen"
-              component={CategoryScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="OrderScreen"
-              component={OrderScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="InstructionScreen"
-              component={InstructionScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="AddressScreen"
-              component={AddressScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="CheckoutScreen"
-              component={CheckoutScreen}
-              options={{headerShown: false}}
-            />
-          </>
-        ) : (
-          <>
-            <Stack.Screen
-              name="OnboardScreen"
-              component={OnboardScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="SignInScreen"
-              component={SignInScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="RegisterScreen"
-              component={RegisterScreen}
-              options={{headerShown: false}}
-            />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  if (loading) {
+    return <LogoScreen />;
+  } else if (newtworErr) {
+    return (
+      <View style={{justifyContent:'center',flex:1}}>
+        <NoInternet
+          refetchData={() => {
+            setLoading(true);
+            setNetworkErr(false);
+            fetchData();
+          }}
+        />
+      </View>
+    );
+  } else if (newtworErr === false && loading === false) {
+
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="AppDrawer">
+          {user ? (
+            <>
+              <Stack.Screen
+                name="AppDrawer"
+                component={AppDrawer}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="ItemView"
+                component={ItemViewScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="Cart"
+                component={CartScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="Search"
+                component={SearchScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="Favorite"
+                component={FavoriteScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="OrderHistoryScreen"
+                component={OrderHistoryScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="AccountScreen"
+                component={AccountScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="CategoryScreen"
+                component={CategoryScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="OrderScreen"
+                component={OrderScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="InstructionScreen"
+                component={InstructionScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="AddressScreen"
+                component={AddressScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="CheckoutScreen"
+                component={CheckoutScreen}
+                options={{headerShown: false}}
+              />
+            </>
+          ) : (
+            <>
+              <Stack.Screen
+                name="OnboardScreen"
+                component={OnboardScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="SignInScreen"
+                component={SignInScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="RegisterScreen"
+                component={RegisterScreen}
+                options={{headerShown: false}}
+              />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
 };
 
 const AppWrapper = () => {
   return (
     <Provider store={store}>
-        <App />
+      <App />
     </Provider>
   );
 };

@@ -6,7 +6,7 @@ import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import {baseUrl,axiosPost} from '../../axios/axios'
 
 import {colors} from '../../colors/colors';
-import {fontSize} from '../../typography/typography';
+import {fontSize, normalize} from '../../typography/typography';
 import CartButton from '../buttons/cartButton';
 import { useDispatch,useSelector } from 'react-redux';
 import {
@@ -101,15 +101,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
-
   },
   containerRight: {
     flex: 1,
   },
   img: {
-    height: 100,
-    width: 120,
-    alignSelf: 'center',
+    height: normalize(60),
+    width: normalize(80),
   },
   heading: {
     fontSize: fontSize.large,
@@ -120,7 +118,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: fontSize.normal,
     color: colors.grey,
-    marginBottom: 10,
+    marginBottom: normalize(4),
   },
   rating: {
     fontSize: fontSize.normal,

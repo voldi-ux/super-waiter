@@ -15,7 +15,7 @@ import {
 
 
 import { colors } from '../colors/colors';
-import {fontSize} from '../typography/typography';
+import {fontSize, normalize} from '../typography/typography';
 import IconF from 'react-native-vector-icons/Feather';
 import { axiosGet, baseUrl } from '../axios/axios';
 import PopUPModal from '../components/modal/modal';
@@ -86,7 +86,6 @@ const SearchScreen = ({navigation}) => {
       <View showsVerticalScrollIndicator={false}>
         <View style={styles.aside}>{renderheading()}</View>
         <FlatList data={items} renderItem={renderResults} keyExtractor={(item)=> item._id }/>
-    <PopUPModal msg={msg} visible={modalVisible} setVisible={(bool) => setVisible(bool)}/>
       </View>
     </SafeAreaView>
   );
@@ -117,7 +116,7 @@ const styles = StyleSheet.create({
   },
 
   textInput: {
-    height: 50,
+    height: normalize(40),
     color: colors.grey,
     backgroundColor: colors.background_top,
     borderWidth: 0,

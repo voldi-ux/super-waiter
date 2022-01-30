@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     fontSize: fontSize.normal,
     color: '#FFF',
     fontWeight: '700',
+    alignSelf:'center'
   },
 });
 

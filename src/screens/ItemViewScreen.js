@@ -109,13 +109,7 @@ const ItemViewScreen = ({navigation, route}) => {
           </View>
         </View>
         <Text style={styles.about}>
-          Eat with relish, toy with our food, or take a tentative mouthful -to
-          take a large mouthful later on, if we like it. Select a piece of
-          chicken from our plate and chew thoughtfully, to pick up a slice of
-          bread and nibble the edge of it soon after. Fall to eat, chomp and
-          swallow enthusiastically, or just pick our food carefully. Eat with
-          relish, toy with our food, or take a tentative mouthful -to take a
-          large mouthful later on, if we like it. Select a piece of
+          { item.description}
         </Text>
         <View style={styles.btn}>
           <View style={styles.readMoreBtn}>

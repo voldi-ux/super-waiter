@@ -1,23 +1,22 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, } from 'react-native';
 
-import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {colors} from '../../colors/colors';
 import {fontSize} from '../../typography/typography';
+import { getFormatedTime } from '../../../timeUtil';
 
-const OrderItem = ({ status}) => {
-  const navigation = useNavigation();
+const OrderItem = ({ item}) => {
+  const time = getFormatedTime(item.date)
 
   return (
     <View style={[styles.container]}>
-      <Text style={styles.heading}>#772234456</Text>
+      <Text style={styles.heading}>#{item.orderNo}</Text>
       <View>
-        <Text style={styles.date}>Ordered on 29-12-21</Text>
-              <Text style={styles.status}>
-                  <Text style={{ fontWeight: '700' }}> Status : </Text> { status}
-         </Text>
+        <Text style={styles.date}>Time : {time}</Text>
+        <Text style={styles.status}>
+          <Text style={{fontWeight: '700'}}> Status : </Text> {item.status}
+        </Text>
       </View>
     </View>
   );

@@ -1,5 +1,5 @@
 //this screen should show  the list of all the current orders of the user i.e orders that are not completed 
-import React from 'react';
+import React, { useEffect,useState} from 'react';
 import {
   View,
   Text,
@@ -7,19 +7,46 @@ import {
   StatusBar,
   StyleSheet,
   SafeAreaView,
-  Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import {io} from 'socket.io-client';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
 import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/Ionicons';
 import OrderItem from '../components/orderItem/orderItem';
+import { axiosPost, baseUrl } from '../axios/axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUsersOrders, selectOrdered, selectUserId } from '../redux/userRedux/userSlice';
 
+let socket;
 
 
 const OrderScreen = ({ navigation }) => {
+  const userId = useSelector(selectUserId)
+  const currentOrders  = useSelector(selectOrdered)
+  const disptach = useDispatch()
     //when the component mounts or renders fetch all the orders related to this current user
+  
+
+  useEffect(() => {
+       disptach(getUsersOrders(userId));
+  }, [])
+  
+  useEffect(() => {
+    socket = io(`${baseUrl}/orders`)
+    socket.on('connect', () => {
+      socket.emit('join-room', {room: userId});
+      socket.on('order-status-change', () => {
+        disptach(getUsersOrders(userId));
+      });
+    });
+    return () => socket.close()
+  })
+
+
+  const renderOrderItems = currentOrders.map(order => <OrderItem item={ order} key={order._id}/>)
+  
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
@@ -34,11 +61,10 @@ const OrderScreen = ({ navigation }) => {
         />
         <View></View>
       </View>
-      <View>
-        <OrderItem status={'delivering'} />
-        <OrderItem status={'preparing'} />
-        <OrderItem status={'on the way'} />
-      </View>
+      <ScrollView>
+        {
+        renderOrderItems}
+      </ScrollView>
     </SafeAreaView>
   );
 };

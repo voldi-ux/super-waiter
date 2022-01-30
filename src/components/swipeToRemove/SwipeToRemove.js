@@ -37,9 +37,9 @@ const SwipeToRemove = ({remove,children}) => {
 
     const pan = useRef(
       PanResponder.create({
-        onMoveShouldSetPanResponder: (e,gesture) => {
-           const {dx, dy} = gesture;
-           return dx > 2 || dx < -2 || dy > 2 || dy < -2;
+        onMoveShouldSetPanResponder: (e, gesture) => {
+          const {dx, dy} = gesture;
+           return dx > 5 || dx < -5 
         },
         onPanResponderMove: Animated.event([null, {dx: moveX}], {
           useNativeDriver: false,
@@ -57,17 +57,11 @@ const SwipeToRemove = ({remove,children}) => {
       }),
     ).current;
 
-console.log('re-rendered after fav changed')
     return (
       <Animated.View
         style={[
           styles.container,
-          // {
-          //   opacity: moveX.interpolate({
-          //     inputRange: [-width*.5,0,width*.5 ],
-          //     outputRange: [0,1,0],
-          //   }),
-          // },
+
         ]}>
         <Animated.View
           {...pan.panHandlers}

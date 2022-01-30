@@ -15,27 +15,28 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import OrderHistoryItem from '../components/orderHistoryItem/orderHistoryItem';
+import { useSelector } from 'react-redux';
+import { selectOrders } from '../redux/userRedux/userSlice';
 
 const width = Dimensions.get('window').width;
 
-const img1 = require('../assests/images/img2.png');
 
-const OrderHistoryScreen = ({navigation}) => {
+const OrderHistoryScreen = ({ navigation }) => {
+  const orders = useSelector(selectOrders)
+  const renderItems = orders.map(order => <OrderHistoryItem key={order._id} item={order}/>)
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topNav}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <IconF name="chevron-left" size={40} color={colors.black} />
           </TouchableOpacity>
           <IconM name="history" size={40} color={colors.black} />
-          <Icon name="options-vertical" size={30} color={colors.black} />
+         <View></View>
         </View>
-              <OrderHistoryItem />
-              <OrderHistoryItem />
-              <OrderHistoryItem />
-       
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {
+        renderItems}
       </ScrollView>
     </SafeAreaView>
   );

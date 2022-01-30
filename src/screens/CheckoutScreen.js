@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,112 +8,117 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Alert,
-  Vibration
+  Vibration,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import {useStripe} from '@stripe/stripe-react-native'
+import {useDispatch, useSelector} from 'react-redux';
+import {useStripe} from '@stripe/stripe-react-native';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
 import IconF from 'react-native-vector-icons/Feather';
 import AccountButton from '../components/buttons/accountButton';
 import {selectUser, selectUserId} from '../redux/userRedux/userSlice';
-import {onOrderSuccesss, selectCartItems, selectInstruction, selectTotal} from '../redux/cart/cartRedux';
-import { axiosPost } from '../axios/axios'
+import {
+  onOrderSuccesss,
+  selectCartItems,
+  selectInstruction,
+  selectTotal,
+} from '../redux/cart/cartRedux';
+import {axiosPost} from '../axios/axios';
 import {StripeProvider, initStripe} from '@stripe/stripe-react-native';
+import Loader from '../components/Loader/Loader';
+import NoInternet from '../components/noInternet/noInternet';
 
-const key ='pk_test_51KFkqNLGGMwO7DWSduOaFyXxo43BPddJi8qPjYbWVfKJ8H5SteqL4LodsgHQgQxdrbcXLUx0ZOnRPL8Nvtj7Vi3D00vJuc4BmJ';
-
+const key =
+  'pk_test_51KFkqNLGGMwO7DWSduOaFyXxo43BPddJi8qPjYbWVfKJ8H5SteqL4LodsgHQgQxdrbcXLUx0ZOnRPL8Nvtj7Vi3D00vJuc4BmJ';
 
 const CheckoutScreen = ({navigation}) => {
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const [loading, setLoading] = useState(true);
+  const [newtworErr, setNetworkErr] = useState(false)
   
+  const dispatch = useDispatch();
+  const {initPaymentSheet, presentPaymentSheet} = useStripe();
+
   const address = useSelector(state => state.cart.address);
   const cartItems = useSelector(selectCartItems);
   const userId = useSelector(selectUserId);
   const cartTotal = useSelector(selectTotal);
-  const instruction = useSelector(selectInstruction)
+  const instruction = useSelector(selectInstruction);
 
-  const delevery = 75
+  const delevery = 75;
   const order = {
     userId,
-    orderNo: Math.floor((Date.now() * Math.random())+parseFloat(address.phone)),
+    orderNo: Math.floor(Date.now() * Math.random() + parseFloat(address.phone)),
     total: delevery + cartTotal,
     items: cartItems,
     customerInfo: {
-      ...address
+      ...address,
     },
     date: Date.now(),
-    instruction
+    instruction,
+    new: true,
+    userDeleted: false,
+    status:"received"
   };
 
   const getPayIntent = async () => {
-    return await axiosPost('payment-intent', {
-      total: (cartTotal + delevery)*100,
-    });
-  }
 
-  const placeOrder = async () => {
-    return await axiosPost('place-order',order)
-  }
-
-  useEffect(() => {
-    // initStripe({
-    //   publishableKey: key,
-    // })
-  }, [])
-  
-  
-  const initializePaymentSheet = async () => {
-
-    const {paymentIntentSecret} = await getPayIntent();
-
-    const {error} = await initPaymentSheet({
-      paymentIntentClientSecret: paymentIntentSecret,
-      merchantDisplayName: 'super waiter',
-    });
-
-    if (!error) {
-      setLoading(true);
-    }
+     const resp = await axiosPost('payment-intent', {
+       total: (cartTotal + delevery) * 100,
+     });
+     setLoading(false)
+     if (resp.msg || !resp) {
+       setNetworkErr(true)
+       return;
+      } 
+    return resp
   };
 
+  const placeOrder = async () => {
+
+    return await axiosPost('place-order', order);
+  };
+
+  const initializePaymentSheet = async () => {
+    const PAYMENT_INTENT = await getPayIntent();
+    if (!PAYMENT_INTENT) return;
+
+    const {error} = await initPaymentSheet({
+      paymentIntentClientSecret: PAYMENT_INTENT.paymentIntentSecret,
+      merchantDisplayName: 'super waiter',
+    });
+  };
 
   useEffect(() => {
     initializePaymentSheet();
-  }, [])
-  
+  }, []);
 
- const openPaymentSheet = async () => {
-   const {error} = await presentPaymentSheet()
+  const openPaymentSheet = async () => {
+    const {error} = await presentPaymentSheet();
 
-   if (error) {
-     Alert.alert(`Error code: ${error.code}`, error.message);
-   } else {
-     const resp = await placeOrder()
-     console.log(resp)
-     if (resp.msg) {
-      return Alert.alert(resp.msg);
-       
-     } else {
-       dispatch(onOrderSuccesss())
-       Vibration.vibrate(5000)
-       Alert.alert(resp.success);
-       navigation.navigate('AppDrawer');
+    if (error) {
+      Alert.alert(`Error code: ${error.code}`, error.message);
+    } else {
+      const resp = await placeOrder();
+      if (resp.msg) {
+        return Alert.alert(resp.msg);
+      } else {
+       await dispatch(onOrderSuccesss());
+        Vibration.vibrate(2000);
+        Alert.alert(resp.success);
+        navigation.navigate('AppDrawer');
       }
-   }
- };
+    }
+  };
+
+  const orderItems = cartItems.map(item => (
+    <View style={styles.item} key={item._id}>
+      <Text style={styles.itemName}>{item.name}</Text>
+      <Text style={styles.itemQty}>1 x {item.qty}</Text>
+    </View>
+  ));
 
 
-
-
-    const orderItems = cartItems.map(item => (
-      <View style={styles.item} key={item._id}>
-            <Text style={styles.itemName}>{item.name }</Text>
-            <Text style={styles.itemQty}>1 x { item.qty}</Text>
-      </View>
-    ));
+ 
   return (
     <SafeAreaView style={styles.container}>
       <StripeProvider publishableKey={key}>
@@ -128,61 +133,75 @@ const CheckoutScreen = ({navigation}) => {
           <Text style={styles.heading}>Checking Out</Text>
           <View></View>
         </View>
-        <ScrollView style={styles.checkOutContainer}>
-          <View style={styles.items}>
-            <Text style={styles.heading2}>Items</Text>
-            {orderItems}
-          </View>
-          <View style={styles.items}>
-            <Text style={styles.heading2}>instruction</Text>
-            {instruction.length ? (
-              <Text style={styles.instruction}>{instruction}</Text>
-            ) : (
-              <Text style={styles.instruction}>no instructions</Text>
-            )}
-          </View>
-          <View style={styles.address}>
-            <Text style={styles.heading2}>customer info & address</Text>
 
-            <Text style={styles.addressItem}>{address.phone}</Text>
-            <Text style={styles.addressItem}>{address.email}</Text>
-            <Text style={styles.addressItem}>Johannesburg</Text>
-            <Text style={styles.addressItem}>{address.street}</Text>
-            <Text style={styles.addressItem}>{address.streetNo}</Text>
-            <Text style={styles.addressItem}>{address.postalCode}</Text>
-          </View>
-          <View style={styles.totals}>
-            <View style={styles.totalsItem}>
-              <Text style={{...styles.totalHeading}}>SubTotal</Text>
-              <Text style={{...styles.total}}>R {cartTotal}.00</Text>
+        {newtworErr ? (
+          <NoInternet
+            refetchData={() => {
+              setLoading(true);
+              setNetworkErr(false);
+              initializePaymentSheet();
+            }}
+          />
+        ) : (
+          <>
+            <ScrollView style={styles.checkOutContainer}>
+              <View style={styles.items}>
+                <Text style={styles.heading2}>Items</Text>
+                {orderItems}
+              </View>
+              <View style={styles.items}>
+                <Text style={styles.heading2}>instruction</Text>
+                {instruction.length ? (
+                  <Text style={styles.instruction}>{instruction}</Text>
+                ) : (
+                  <Text style={styles.instruction}>no instructions</Text>
+                )}
+              </View>
+              <View style={styles.address}>
+                <Text style={styles.heading2}>customer info & address</Text>
+
+                <Text style={styles.addressItem}>{address.phone}</Text>
+                <Text style={styles.addressItem}>{address.email}</Text>
+                <Text style={styles.addressItem}>Johannesburg</Text>
+                <Text style={styles.addressItem}>{address.street}</Text>
+                <Text style={styles.addressItem}>{address.streetNo}</Text>
+                <Text style={styles.addressItem}>{address.postalCode}</Text>
+              </View>
+              <View style={styles.totals}>
+                <View style={styles.totalsItem}>
+                  <Text style={{...styles.totalHeading}}>SubTotal</Text>
+                  <Text style={{...styles.total}}>R {cartTotal}.00</Text>
+                </View>
+                <View style={styles.totalsItem}>
+                  <Text style={{...styles.totalHeading}}>Delivery</Text>
+                  <Text style={{...styles.total}}>R {delevery}.00</Text>
+                </View>
+                <View style={styles.totalsItem}>
+                  <Text
+                    style={{
+                      ...styles.totalHeading,
+                      fontWeight: '800',
+                      fontSize: fontSize.large_xl,
+                    }}>
+                    Total
+                  </Text>
+                  <Text
+                    style={{
+                      ...styles.totalHeading,
+                      fontWeight: '800',
+                      fontSize: fontSize.large_xl,
+                    }}>
+                    R {cartTotal + delevery}.00
+                  </Text>
+                </View>
+              </View>
+            </ScrollView>
+            <View style={styles.btn}>
+              <AccountButton title="Pay now" onPress={openPaymentSheet} />
             </View>
-            <View style={styles.totalsItem}>
-              <Text style={{...styles.totalHeading}}>Delivery</Text>
-              <Text style={{...styles.total}}>R {delevery}.00</Text>
-            </View>
-            <View style={styles.totalsItem}>
-              <Text
-                style={{
-                  ...styles.totalHeading,
-                  fontWeight: '800',
-                  fontSize: fontSize.large_xl,
-                }}>
-                Total
-              </Text>
-              <Text
-                style={{
-                  ...styles.totalHeading,
-                  fontWeight: '800',
-                  fontSize: fontSize.large_xl,
-                }}>
-                R {cartTotal + delevery}.00
-              </Text>
-            </View>
-          </View>
-        </ScrollView>
-        <View style={styles.btn}>
-          <AccountButton title="Pay now" onPress={openPaymentSheet} />
-        </View>
+          </>
+        )}
+        <Loader visible={loading} />
       </StripeProvider>
     </SafeAreaView>
   );

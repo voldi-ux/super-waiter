@@ -3,10 +3,8 @@ import Slideshow from 'react-native-slideshow-improved';
 import {Dimensions} from 'react-native'
 const Slide1 = require('../../assests/images/slide.jpg');
 const Slide2 = require('../../assests/images/slide-2.jpg');
-const Slide3 = require('../../assests/images/slide-3.jpg');
 
 //the react-native slideshow package should be modified after npm install. replace the codes in its main files with the codes in slideshowPlaceHolder.js file.
-
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 console.log(width,height)
@@ -23,9 +21,6 @@ export default class SlideshowHeader extends Component {
         },
         {
           url: Slide2,
-        },
-        {
-          url: Slide3,
         },
       ],
     };
@@ -51,7 +46,7 @@ export default class SlideshowHeader extends Component {
   render() {
     return (
       <Slideshow
-        height={height*.3}
+        height={width > 360 ? height*.3 : height*.35}
         width={width}
         dataSource={this.state.dataSource}
         position={this.state.position}

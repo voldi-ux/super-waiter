@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
+  KeyboardAvoidingView
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import {colors} from '../colors/colors';
@@ -38,6 +39,9 @@ const SignInScreen = ({navigation}) => {
   };
 
   const handleChange = (txt, type) => {
+
+    if (err) setErr(null)
+    
     if (type === 'email') return setEmail(txt);
     setPassword(txt);
   };
@@ -53,46 +57,45 @@ const SignInScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-        <View style={styles.topNav}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <IconF name="chevron-left" size={40} color={colors.black} />
-          </TouchableOpacity>
-          <IconM name="account" size={40} color={colors.black} />
-          <View></View>
-        </View>
-        <View style={styles.containerInner}>
-          <Text style={styles.heading}>Sign in now</Text>
-          {err ? <ErrorComponent msg={err} /> : null}
-          <TextInputComponent
-            autoFocus
-            label="Email"
-            onChangeText={text => handleChange(text, 'email')}
-          />
-          <TextInputComponent
-            label="Password"
-            secureTextEntry={true}
-            onChangeText={text => handleChange(text, 'password')}
-          />
-          <View style={styles.flex}>
-            <Text style={[styles.link, {color: colors.yellow}]}>
-              Do not have an account?
+      <View style={styles.topNav}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <IconF name="chevron-left" size={40} color={colors.black} />
+        </TouchableOpacity>
+        <IconM name="account" size={40} color={colors.black} />
+        <View></View>
+      </View>
+      <KeyboardAvoidingView style={styles.containerInner}>
+        <Text style={styles.heading}>Sign in now</Text>
+        {err ? <ErrorComponent msg={err} /> : null}
+        <TextInputComponent
+          autoFocus
+          label="Email"
+          onChangeText={text => handleChange(text, 'email')}
+        />
+        <TextInputComponent
+          label="Password"
+          secureTextEntry={true}
+          onChangeText={text => handleChange(text, 'password')}
+        />
+        <View style={styles.flex}>
+          <Text style={[styles.link, {color: colors.yellow}]}>
+            Do not have an account?
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('RegisterScreen');
+              resetValues();
+            }}>
+            <Text style={[styles.link, {color: colors.blue}]}>
+              {' '}
+              Sign up instead
             </Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('RegisterScreen');
-                resetValues();
-              }}>
-              <Text style={[styles.link, {color: colors.blue}]}>
-                {' '}
-                Sign up instead
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.btn}>
-            <AccountButton title="sign in" iconName="login" onPress={signIn} />
-          </View>
+          </TouchableOpacity>
         </View>
-
+        <View style={styles.btn}>
+          <AccountButton title="sign in" iconName="login" onPress={signIn} />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {colors} from '../../colors/colors';
-import {fontSize} from '../../typography/typography';
+import {fontSize, normalize} from '../../typography/typography';
 import CartButton from '../buttons/cartButton';
 import { baseUrl } from '../../axios/axios';
 import { useDispatch } from 'react-redux';
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   img: {
-    height: 100,
-    width: 120,
+    height: normalize(60),
+    width: normalize(80),
     alignSelf: 'center',
   },
   heading: {

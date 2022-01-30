@@ -7,7 +7,7 @@ import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import IncrementDecrementButton from '../buttons/incrementDecrementButton';
 
 import { colors } from '../../colors/colors';
-import { fontSize } from '../../typography/typography';
+import { fontSize, normalize } from '../../typography/typography';
 import { baseUrl } from '../../axios/axios';
 import { useDispatch } from 'react-redux';
 import { decrementItem, incrementItem, removeItem } from '../../redux/cart/cartRedux';
@@ -116,8 +116,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   img: {
-    height: 100,
-    width: 120,
+    height: normalize(60),
+    width: normalize(80),
     alignSelf: 'center',
   },
   heading: {
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: fontSize.normal,
     color: colors.grey,
-    marginBottom: 10,
+    marginBottom: normalize(4),
   },
   rating: {
     fontSize: fontSize.normal,
@@ -139,9 +139,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
   },
-  delete: {
-    // backgroundColor: colors.red,
-  },
+
 });
 
 export default memo(CartItem)

@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import IconF from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {colors} from '../../colors/colors';
-import {fontSize} from '../../typography/typography';
+import {fontSize, normalize} from '../../typography/typography';
 const IncrementDecrementButton = ({ size, qty, increment, decrement }) => {
   
   return (
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
     paddingVertical: 5,
     paddingHorizontal: 15,
-    width: 150,
+    width: normalize(130),
     borderRadius: 100,
   },
   quantityL: {
@@ -50,10 +50,10 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   iconL: {
-    size: 30,
+    size: normalize(25),
   },
   iconS: {
-    size: 25,
+    size: normalize(23),
   },
 });
 

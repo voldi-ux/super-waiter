@@ -14,6 +14,7 @@ const initialState = {
   modalVisible: false,
   orderInstrunction: '',
   address: {},
+  
 };
 
 const cartSlice = createSlice({

@@ -9,7 +9,8 @@ import {
   Dimensions,
   Animated,
   PanResponder,
-  StatusBar
+  StatusBar,
+  SafeAreaView
 } from 'react-native';
 import {colors} from '../../colors/colors';
 import {fontSize} from '../../typography/typography';
@@ -28,7 +29,7 @@ const Options = ({ visible, setVisible, options,close }) => {
   //decides whether the user wants to close the options
   const snap = (type) => {
     Animated.timing(moveY, {
-      duration: 200,
+      duration: 300,
       useNativeDriver: true,
       toValue: type === 'backUp' ? 0 : height
     }).start(() => {
@@ -64,17 +65,15 @@ const Options = ({ visible, setVisible, options,close }) => {
   })).current
 
   useEffect(() => {
-    console.log('use effect')
     Animated.timing(moveY, {
-      duration: 500,
+      duration: 300,
       useNativeDriver: true,
       toValue:0
     }).start()
   })
   
   return (
-    <View
-    
+    <SafeAreaView
       // style={{transform: [{translateY: moveY2}]}}
       {...pan.panHandlers}>
       <Modal
@@ -86,23 +85,23 @@ const Options = ({ visible, setVisible, options,close }) => {
         onRequestClose={() => {
           close();
         }}>
-        <View style={{ height: height + StatusBar.currentHeight }}>
+        <View style={{height: height + StatusBar.currentHeight}}>
           {/* the view below just pushes our modal content to bottom */}
+          <View style={{flex: 1}}></View>
+          <Animated.View
+            style={[styles.modalView, {transform: [{translateY: moveY}]}]}>
             <View style={{flex: 1}}></View>
-              <Animated.View
-                style={[styles.modalView, {transform: [{translateY: moveY}]}]}>
-                <View style={{flex: 1}}></View>
 
-                {renderOptions}
-                <TouchableOpacity
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={snap}>
-                  <Text style={styles.textStyle}>close</Text>
-                </TouchableOpacity>
-              </Animated.View>
-          </View>
+            {renderOptions}
+            <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={snap}>
+              <Text style={styles.textStyle}>close</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 

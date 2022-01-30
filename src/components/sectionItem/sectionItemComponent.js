@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native'
 import {colors} from '../../colors/colors';
 import IconF from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
-import { fontSize } from '../../typography/typography';
+import { fontSize, normalize } from '../../typography/typography';
 import {baseUrl } from '../../axios/axios'
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../../redux/cart/cartRedux';
@@ -64,7 +64,7 @@ const SectionItem = ({ item }) => {
       </View>
       <View
         style={{
-          marginTop: 20,
+          marginTop: normalize(4),
           display: 'flex',
           justifyContent: 'space-between',
           flexDirection: 'row',
@@ -81,26 +81,22 @@ const SectionItem = ({ item }) => {
 
 const styles = StyleSheet.create({
   item: {
-    marginTop: 20,
+    marginTop: normalize(20),
     backgroundColor: colors.background_top,
-    width: 180,
-    padding: 15,
+    width: normalize(130),
+    padding: normalize(10),
     borderRadius: 15,
-    minHeight: 300,
-    marginBottom: 10,
-    marginRight: 20,
-    
+    marginRight: normalize(10),
   },
   img: {
-    // width: width * 0.35,
-    height: 150,
-    marginHorizontal:"auto"
+    height: normalize(80),
+    marginHorizontal: 'auto',
   },
   name: {
     fontSize: fontSize.large,
     color: colors.black,
     textTransform: 'capitalize',
-    marginBottom:10,
+    marginBottom: normalize(4),
   },
   price: {
     fontSize: fontSize.large,

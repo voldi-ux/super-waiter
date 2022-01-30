@@ -1,40 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {colors} from '../../colors/colors';
 import {fontSize} from '../../typography/typography';
 import CartButton from '../buttons/cartButton';
+import {getFormatedTime} from '../../../timeUtil';
+import SwipeToRemove from '../swipeToRemove/SwipeToRemove';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteOrder, selectUserId } from '../../redux/userRedux/userSlice';
 
 
-const OrderHistoryItem = () => {
-  const navigation = useNavigation();
+const OrderHistoryItem = ({ item}) => {
+   const time = getFormatedTime(item.date);
 
+  const userId = useSelector(selectUserId)
+const dispatch = useDispatch()
+  
+
+  
+  const remove = () => {
+     dispatch(deleteOrder(userId, item._id))
+  }
   return (
-    <View style={[styles.container]}>
-      <Text style={styles.heading}>Shrimps</Text>
+    <SwipeToRemove remove={remove}>
+      <View style={[styles.container]}>
+        <Text style={styles.heading}>#{ item.orderNo}</Text>
         <View style={styles.flex}>
-          <Text style={styles.date}>Ordered on 29-12-21</Text>
-          <View style={[styles.flex]}>
-            <TouchableOpacity style={styles.edit}>
-              <IconM name="square-edit-outline" size={30} color={'#fff'} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.delete}>
-              <IconM name="trash-can" size={30} color={'#fff'} />
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.date}>time : {time}</Text>
+          <TouchableOpacity style={styles.delete} onPress={remove}>
+            <IconM name="trash-can" size={30} color={colors.grey} />
+          </TouchableOpacity>
         </View>
-      <View style={styles.btn}>
-        <CartButton title="Re-Order" />
+        <View style={styles.btn}>
+          <CartButton title="Re-Order" />
+        </View>
       </View>
-    </View>
+    </SwipeToRemove>
   );
 };
 
@@ -49,7 +57,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background_top,
     paddingHorizontal: 10,
     paddingVertical: 15,
-    marginVertical: 10,
   },
 
   heading: {
@@ -68,7 +75,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue,
   },
   delete: {
-    backgroundColor: colors.red,
+    // backgroundColor: colors.red,
     marginLeft: 15,
   },
   btn: {

@@ -31,6 +31,7 @@ const Section = ({title, items}) => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 40,
+    paddingHorizontal: 10,
   },
   heading: {
     fontSize: fontSize.large_xl,

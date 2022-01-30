@@ -9,8 +9,6 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList,
-  LayoutAnimation,
-  UIManager
 } from 'react-native';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
@@ -22,19 +20,19 @@ import { clearFavs, logOut, selectFavs, selectUserId } from '../redux/userRedux/
 import FavoriteItem from '../components/favoriteItem/favoriteItem';
 import Options from '../components/optionsComponent/options';
 import { clearCart } from '../redux/cart/cartRedux';
+import { baseUrl } from '../axios/axios';
 
 const width = Dimensions.get('window').width;
 
 
-
 const FavoriteScreen = ({ navigation }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
-
+  
   const favs = useSelector(selectFavs)
   const userId = useSelector(selectUserId)
   const dispatch = useDispatch()
-
-
+  
+ 
   const renderFavs = ({ item }) => {
     return <FavoriteItem item={item}/>
   }
@@ -94,16 +92,21 @@ const favsOptions = [
         </TouchableOpacity>
         <IconM name="heart" size={30} color={colors.red} />
         <TouchableOpacity onPress={openOptions}>
-          <Icon name="options-vertical" size={30} color={colors.black} />
+          <Icon name="options-vertical" size={25} color={colors.black} />
         </TouchableOpacity>
       </View>
-      <View style={styles.aside}>
-        <Text style={styles.asideText}>
-          there are <Text style={{color: colors.yellow}}>{favs.length}</Text>{' '}
-          items in favorites
-        </Text>
-      </View>
+
       <FlatList
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={() => (
+          <View style={styles.aside}>
+            <Text style={styles.asideText}>
+              there are{' '}
+              <Text style={{color: colors.yellow}}>{favs.length}</Text> items in
+              favorites
+            </Text>
+          </View>
+        )}
         data={favs}
         keyExtractor={item => item._id}
         renderItem={renderFavs}

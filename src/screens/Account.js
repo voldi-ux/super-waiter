@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   StatusBar,
   StyleSheet,
   SafeAreaView,
-  Dimensions,
   TouchableOpacity,
 } from 'react-native';
 import {colors} from '../colors/colors';
@@ -15,14 +14,29 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import AccountButton from '../components/buttons/accountButton';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../redux/userRedux/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUsersOrders, logOut, selectOrdered, selectOrders, selectUser } from '../redux/userRedux/userSlice';
 
 
 
 const AccountScreen = ({ navigation }) => {
   const user = useSelector(selectUser)
+  const orders = useSelector(selectOrders) 
+  const ordered = useSelector(selectOrdered) 
+  const totlaSpent = orders.reduce((acc, ord) => { 
+    acc = acc + ord.total
+    return acc
+  }, 0)
+  const disptach = useDispatch()
+  const signOut = () => {
+    disptach(logOut())
+  }
 
+  useEffect(() => {
+    disptach(getUsersOrders(user._id));
+  }, [user]);
+
+  
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
@@ -35,26 +49,28 @@ const AccountScreen = ({ navigation }) => {
           <View></View>
         </View>
         <View style={styles.containerInner}>
-          <View style={styles.accountListItem}>
-            <IconM name="account" size={30} color={colors.purple} />
-            <Text style={styles.text}>{user.name} { user.surname}</Text>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View></View>
             <TouchableOpacity style={styles.edit}>
               <IconM name="square-edit-outline" size={30} color={'#fff'} />
             </TouchableOpacity>
+          </View>
+          <View style={styles.accountListItem}>
+            <IconM name="account" size={30} color={colors.purple} />
+            <Text style={styles.text}>
+              {user.name} {user.surname}
+            </Text>
+            <View></View>
           </View>
           <View style={styles.accountListItem}>
             <IconM name="email" size={30} color={colors.yellow} />
-            <Text style={styles.text}>{user.email }</Text>
-            <TouchableOpacity style={styles.edit}>
-              <IconM name="square-edit-outline" size={30} color={'#fff'} />
-            </TouchableOpacity>
+            <Text style={styles.text}>{user.email}</Text>
+            <View></View>
           </View>
           <View style={styles.accountListItem}>
             <IconM name="phone" size={30} color={colors.blue} />
-            <Text style={styles.text}>{ user.phone}</Text>
-            <TouchableOpacity style={styles.edit}>
-              <IconM name="square-edit-outline" size={30} color={'#fff'} />
-            </TouchableOpacity>
+            <Text style={styles.text}>{user.phone}</Text>
+            <View></View>
           </View>
           <View style={styles.accountListItem}>
             <IconM name="lock" size={30} color={colors.blue_dark} />
@@ -63,36 +79,38 @@ const AccountScreen = ({ navigation }) => {
               <Icon name="options" size={30} color={colors.blue_dark} />
               <Icon name="options" size={30} color={colors.blue_dark} />
             </View>
-            <TouchableOpacity style={styles.edit}>
-              <IconM name="square-edit-outline" size={30} color={'#fff'} />
-            </TouchableOpacity>
+            <View></View>
           </View>
         </View>
         <View style={styles.dashboard}>
           <View style={[styles.dashboardRow, {marginBottom: 20}]}>
-            <View style={[styles.dashboardItem,{backgroundColor:colors.purple}]}>
-              <Text style={styles.dashboardTxtL}>17</Text>
+            <View
+              style={[styles.dashboardItem, {backgroundColor: colors.purple}]}>
+              <Text style={styles.dashboardTxtL}>0</Text>
               <Text style={styles.dashboardTxtS}>completed orders</Text>
             </View>
-            <View style={[styles.dashboardItem,{backgroundColor:colors.blue}]}>
-              <Text style={styles.dashboardTxtL}>3</Text>
+            <View
+              style={[styles.dashboardItem, {backgroundColor: colors.blue}]}>
+              <Text style={styles.dashboardTxtL}>{ordered.length}</Text>
               <Text style={styles.dashboardTxtS}>current orders</Text>
             </View>
           </View>
           <View style={styles.dashboardRow}>
-            <View style={[styles.dashboardItem,{backgroundColor:colors.blue}]}>
-              <Text style={styles.dashboardTxtL}>20</Text>
+            <View
+              style={[styles.dashboardItem, {backgroundColor: colors.blue}]}>
+              <Text style={styles.dashboardTxtL}>{orders.length }</Text>
               <Text style={styles.dashboardTxtS}>Total orders</Text>
             </View>
-            <View style={[styles.dashboardItem,{backgroundColor:colors.purple}]}>
-              <Text style={styles.dashboardTxtL}>R 3232.00</Text>
+            <View
+              style={[styles.dashboardItem, {backgroundColor: colors.purple}]}>
+              <Text style={styles.dashboardTxtL}>R {totlaSpent}.00</Text>
               <Text style={styles.dashboardTxtS}>Money Spent</Text>
             </View>
           </View>
         </View>
       </ScrollView>
       <View style={styles.btn}>
-        <AccountButton title="sign out" iconName="logout" />
+        <AccountButton title="sign out" iconName="logout" onPress={signOut} />
       </View>
     </SafeAreaView>
   );
@@ -109,11 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginTop: 40,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 10},
-    shadowOpacity: 0.9,
-    shadowRadius: 5,
-    elevation: 5,
+ 
   },
   topNav: {
     display: 'flex',

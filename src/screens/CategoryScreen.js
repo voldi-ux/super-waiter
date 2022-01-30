@@ -12,19 +12,15 @@ import {
 } from 'react-native';
 import {colors} from '../colors/colors';
 import {fontSize} from '../typography/typography';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconF from 'react-native-vector-icons/Feather';
-import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
-import IncrementDecrementButton from '../components/buttons/incrementDecrementButton';
 import {useSelector} from 'react-redux';
 import {getCategory, getItem} from '../redux/appData/appData';
-import {baseUrl} from '../axios/axios';
 import SearchItem from '../components/searchItem/searchItem';
 import {FlatList} from 'react-native-gesture-handler';
+import Cart from '../components/cart/cart';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const img1 = require('../assests/images/img2.png');
 
 const CategoryScreen = ({navigation, route}) => {
   const {category} = route.params;
@@ -41,7 +37,7 @@ const CategoryScreen = ({navigation, route}) => {
           <IconF name="chevron-left" size={40} color={colors.black} />
         </TouchableOpacity>
         <Text style={styles.headingTop}>{category}</Text>
-        <View></View>
+       <Cart size={30} color={colors.black}/>
       </View>
 
       <FlatList

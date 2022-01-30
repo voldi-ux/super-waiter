@@ -4,14 +4,7 @@ import {axiosPost} from '../../axios/axios'
 
 //orders are all the previous orders of the user that which have completed and the oredred are the orders that have been not been completed.
 const initialState = {
-  info: {
-    _id: '61d41fa7d95de8082d73c434',
-    name: 'vee',
-    surname: 'vee',
-    email: 'voldi@gmail.com',
-    phone: '0628999725',
-    orderCount: 0,
-  },
+  info: null,
   favorites: [],
   orders: [],
   ordered: [],
@@ -39,11 +32,26 @@ const userSlice = createSlice({
        
         clearUserFavs: (state, action) => {
           state.favorites = []
-        }
+      },
+      getOrders: (state, action) => {
+           state = User.formatOrders(state,action.payload)
+      },
+      
+      deleteUserOrder: (state, action) => {
+        state = User.deleteOrder(state,action.payload)
+      }
     }
 })
 
-export const { logIn, logOut, addItemToFav, removeItemFromFav,clearUserFavs } = userSlice.actions
+export const {
+  logIn,
+  logOut,
+  addItemToFav,
+  removeItemFromFav,
+  clearUserFavs,
+  getOrders,
+  deleteUserOrder,
+} = userSlice.actions;
 
 
 //selectors
@@ -64,5 +72,23 @@ export const clearFavs = (userId) =>async dispatch => {
 
   dispatch(clearUserFavs())
 }
+
+export const getUsersOrders = userId =>async dispatch => {
+  const res = await axiosPost('get-user-orders', {userId});
+  if (!res.msg || !res.err) {
+     dispatch(getOrders(res))
+  }
+
+}
+export const deleteOrder = (userId,orderId) =>async dispatch => {
+  const res = await axiosPost('delete-order', {userId, orderId});
+  if (!res.msg || !res.err) {
+     dispatch(deleteUserOrder(orderId));
+  }
+
+}
+
+
+
 
 export default userSlice.reducer

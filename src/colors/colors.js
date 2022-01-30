@@ -8,5 +8,6 @@ export const colors = {
   blue_dark: '#08052d',
   grey: '#707070',
   purple: "#AE26FB",
-  orange:"#F8B816"
+  orange: "#F8B816",
+  white:'#fff'
 };
