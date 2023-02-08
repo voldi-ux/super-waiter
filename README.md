@@ -15,4 +15,4 @@ make sure to use your own stripe public api key if you have one else just use my
 to replace my api key with yours, goto  /src/sreens/checkoutScreen.js and replace the key with your key.
 
 
-Feel to fork the project and do whatever you wanna do with it
+Feel free to fork the project and do whatever you wanna do with it
